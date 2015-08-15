@@ -13,6 +13,22 @@
 # This is an example of a global .gitignore - to use, copy to ~/.gitignore
 #
 
-*~
+# Mac files that need to always get ignored
+._*
 .DS_Store
+.Trashes
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.VolumeIcon.icns
+.DocumentRevisions-V100
 Icon?
+
+# Vim temporary files that need to always get ignored
+*~
+.*.swp
+.*.swo
+
+/*.sublime-project
+/*.sublime-workspace
+/*.esproj

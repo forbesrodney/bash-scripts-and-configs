@@ -1,0 +1,23 @@
+#
+# The Creative Commons Attribution 4.0 International License (CC-BY)
+#
+# Copyright (c) 2015 Snakepit Software
+# Author: Rodney C Forbes   <5n4k3@snakepitsoftware.com>
+#
+# This work is licensed under the Creative Commons Attribution
+# 4.0 International License. To view a copy of this license,
+# visit http://creativecommons.org/licenses/by/4.0/.
+#
+
+#
+# This is an example of a .digrc - to use, copy to ~/.digrc
+#
+
+# Do not print the initial comment in the output identifying the version of dig
+# and the query options that have been applied.
++nocmd
+# Do not print the statistics: when the query was made, size of the reply and
+# so on
++nostats
+# Do not print the question section of a query
++noquestion

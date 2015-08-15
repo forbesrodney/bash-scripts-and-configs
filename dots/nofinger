@@ -1,0 +1,18 @@
+#
+# The Creative Commons Attribution 4.0 International License (CC-BY)
+#
+# Copyright (c) 2015 Snakepit Software
+# Author: Rodney C Forbes   <5n4k3@snakepitsoftware.com>
+#
+# This work is licensed under the Creative Commons Attribution
+# 4.0 International License. To view a copy of this license,
+# visit http://creativecommons.org/licenses/by/4.0/.
+#
+
+#
+# This is an example of a .nofinger - to use, copy to ~/.nofinger
+#
+
+# This file doesn't need to contain anything.
+# It's just a hint for the operating system to not leak any information about
+# this user.
