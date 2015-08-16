@@ -47,7 +47,7 @@ OS=$(uname -s | tr "[:upper:]" "[:lower:]")
 #
 
 # Non shell specific
-DOTS="digrc nslookuprc nofinger gitignore"
+DOTS="digrc nslookuprc nofinger gitignore vimrc"
 # BASH shell
 DOTS="${DOTS} bash_profile bashrc bash_logout bash_alias"
 # SH shell (including ash, dash, ...)
