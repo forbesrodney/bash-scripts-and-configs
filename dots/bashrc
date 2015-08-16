@@ -1,0 +1,283 @@
+#
+# The Creative Commons Attribution 4.0 International License (CC-BY)
+#
+# Copyright (c) 2015 Snakepit Software
+# Author: Rodney C Forbes   <5n4k3@snakepitsoftware.com>
+#
+# This work is licensed under the Creative Commons Attribution
+# 4.0 International License. To view a copy of this license,
+# visit http://creativecommons.org/licenses/by/4.0/.
+#
+
+# This file is sourced by all *interactive* bash shells on startup,
+# including some apparently interactive shells such as scp and rcp
+# that can't tolerate any output.  So make sure this doesn't display
+# anything or bad things will happen!!
+
+# New files should only be writable by the user
+umask 022
+
+# Disable history until our environment is fully configured
+set +o history
+
+# Test for an interactive shell.  There is no need to set anything
+# past this point for scp and rcp, and it's important to refrain from
+# outputting anything in those cases.
+if [[ $- != *i* ]] ; then
+    # Shell is truly non-interactive.  Be done now!
+    return
+fi
+
+###########################################
+### From here down, we are interactive. ###
+###########################################
+
+###########################################
+### Start with some reasonable defaults ###
+###########################################
+if [ -n ${BASH:-""} ]; then
+    [ -r /etc/bashrc ] && . /etc/bashrc
+fi
+
+# These are used in conjunction with $OSTYPE to allow one set of dot files to be
+# used on many platforms.
+#       On OS/X Yosemite (10.4) :
+#           $OSTYPE == "darwin14"
+#           $OS     == "darwin"
+#           #REL    == "14.4.0"
+#       On Lubuntu 15.04 :
+#           $OSTYPE == "linux-gnu"
+#           $OS     == "linux"
+#           $REL    == "3.19.0-25-generic"
+#
+# This isn't perfect. Ultimately what would be most useful would be something
+# like ...
+#       $ARCH     == "x64"
+#       $PLATFORM == "linux"
+#       $KERNEL   == "3.19.0"
+#       $DISTRO   == "lubuntu"
+#       $RELEASE  == "15.04"
+#
+# uname can provide some of this information, but it's not consistant across
+# platforms.
+#       On OS/X Yosemite (10.4) :
+#           `uname -m` == "x86_64"
+#           `uname -p` == "i386"
+#           `uname -i` == ERROR
+#           `uname -o` == ERROR
+#       On Lubuntu 15.04 :
+#           `uname -m` == "i686"
+#           `uname -p` == "i686"
+#           `uname -i` == "i686"
+#           `uname -o` == "GNU/Linux"
+#
+# Other approaches to getting some of this information that really can't always
+# be relied on because they might not be installed would be 'python -mplatform'
+# and 'lsb_release' and 'gcc --version'
+#
+# Other kind of hackish methods include using the contents of files like
+# /etc/issue and /etc/version
+#
+export OS=$(uname -s | tr "[:upper:]" "[:lower:]")
+export REL=$(uname -r)
+
+#####################
+### Shell Options ###
+#####################
+
+# These should be ON
+set -o braceexpand
+set -o emacs
+set -o hashall
+set -o histexpand
+set -o interactive-comments
+set -o monitor
+
+# These should also be ON
+shopt -s checkwinsize
+shopt -s cmdhist
+shopt -s expand_aliases
+shopt -s extquote
+shopt -s force_fignore
+shopt -s histappend
+shopt -s hostcomplete
+shopt -s interactive_comments
+shopt -s login_shell
+shopt -s progcomp
+shopt -s promptvars
+shopt -s sourcepath
+shopt -s extglob
+
+# These should be OFF
+set +o allexport
+set +o errexit
+set +o errtrace
+set +o functrace
+set +o ignoreeof
+set +o keyword
+set +o noclobber
+set +o noexec
+set +o noglob
+set +o nolog
+set +o notify
+set +o nounset
+set +o onecmd
+set +o physical
+set +o pipefail
+set +o posix
+set +o privileged
+set +o verbose
+set +o vi
+set +o xtrace
+
+# These should also be OFF
+shopt -u cdable_vars
+shopt -u cdspell
+shopt -u checkhash
+shopt -u dotglob
+shopt -u execfail
+shopt -u extdebug
+shopt -u extglob
+shopt -u failglob
+shopt -u gnu_errfmt
+shopt -u histreedit
+shopt -u histverify
+shopt -u huponexit
+shopt -u lithist
+shopt -u mailwarn
+shopt -u no_empty_cmd_completion
+shopt -u nocaseglob
+shopt -u nocasematch
+shopt -u nullglob
+shopt -u restricted_shell
+shopt -u shift_verbose
+shopt -u xpg_echo
+
+######################
+### Prompt Related ###
+######################
+# Shorten the working directory for our prompt
+#   /dir1/dir2/dir3/dir4/dir5  = /dir1/.../dir3/dir4/dir5
+#   ~/dir1/dir2/dir3/dir4/dir5 = ~/dir1/.../dir3/dir4/dir5
+function getshortenedpath() {
+    pwd | awk '// {
+            sub(home,"~",$0);
+            n = split($0, x, "/");
+            s = ((n <= 6)? $0: x[1] "/" x[2] "/.../" x[n-2] "/" x[n-1] "/" x[n]);
+            print s;
+            exit (0);
+            }' home=$HOME
+}
+
+if [ ${SHLVL} -eq 1 ];
+then
+    export PS1="[\\u@\\h][\$(getshortenedpath)]\\$"
+else
+    export PS1="[\\u@\\h][\$(getshortenedpath)][${SHLVL}]\\$"
+fi
+
+#############################
+### Environment Variables ###
+#############################
+# cd search path
+export CDPATH="~:~/Development"
+
+# Ignore duplicates and ls (with no arguments) as well as built-ins like bg, fg and exit
+export HISTIGNORE="&:[ ]*:ls:[bf]g:exit"
+# How many history items to keep track of
+export HISTSIZE=100
+#export HISTSIZE=1000000
+# How many history items to save when shell exits
+export HISTFILESIZE=500
+#export HISTFILESIZE=1000000000
+export HISTTIMEFORMAT='%a %T '
+
+export TERM='xterm'
+export VISUAL='vim'
+export EDITOR="$VISUAL"
+export GIT_EDITOR="$VISUAL"
+
+#
+# Aliases
+#
+
+[[ -f ~/.bash_alias ]] && . ~/.bash_alias
+
+#
+# Command Line Completion
+#
+
+[[ -f /etc/bash_completion ]] && . /etc/bash_completion
+[[ -f ~/.bash_completion ]] && . ~/.bash_completion
+
+#
+# Key bindings are in .inputrc
+#
+
+#
+# Functions
+#
+
+function pdir() { dir $* | more; }
+
+# If you ever get lost, this will give you most of what you would need.
+function status() {
+    local dev=`tty`
+    echo "`date`"
+    echo "You are:"
+    echo "   `whoami`@`hostname`,${dev:t} ($TERM) [${SHELL:t}]"
+    echo ""
+    echo "Directories:"
+    echo "   Current - `pwd`"
+    echo "   Stack   - `dirs`"
+    echo "   Home    - $HOME"
+    echo ""
+    echo "and so life goes on..."
+    echo "Copyright (c) 1992-2007 Rodney C Forbes"
+}
+
+# Here is a series of functions that will set the titles for xterms and others
+
+# set the title bar of the terminal
+function title () {
+    case "$TERM" in
+        *term | rxvt)
+            echo -n -e "\033]2;$*\007"
+            ;;
+        *)
+            echo "Unable to perform this function."
+            ;;
+    esac
+}
+
+# set the terminal's icon title
+function ititle () {
+    case "$TERM" in
+        *term | rxvt)
+            echo -n -e "\033]1;$*\007"
+            ;;
+        *)
+            echo "Unable to perform this function."
+            ;;
+    esac
+}
+
+# set both the title bar of the terminal and the terminal's icon title
+function xtitle () {
+    case "$TERM" in
+        *term | rxvt)
+            echo -n -e "\033]0;$*\007"
+            ;;
+        *)
+            echo "Unable to perform this function."
+            ;;
+    esac
+}
+
+#
+# Wrap it all up
+#
+
+# Reenable the history
+set -o history
+
