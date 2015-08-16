@@ -50,21 +50,27 @@ DOTS="${DOTS} bash_profile bashrc bash_logout bash_alias"
 DOTS="${DOTS} profile"
 # CSH
 #DOTS="${DOTS} .cshrc .login .logout .alias"
+# Other
+DOTS="${DOTS} digrc nslookuprc nofinger gitignore"
 
 oldpath=`pwd`
 cd ~
 for f in ${DOTS}; do
-    if ! [ -h .${f} ]; then
-        echo "Skipping .${f} : file exists and is not a symbolic link"
-        continue
-    fi
-    if [ -h .${f} ]; then
-        echo "Removing old link : .${f}"
+    if [ -e .${f} ]; then
+        if ! [ -h .${f} ]; then
+            echo "Skipping .${f} : file exists and is not a symbolic link"
+            continue
+        fi
+        if [ -h .${f} ]; then
+            echo "Removing old link : .${f}"
+            if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
+                rm ~/.${f}
+            fi
+        fi
     fi
 
     echo "Creating new link : .${f} -> ${SCRIPTDIR}/dots/${f}"
     if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-        rm ~/.${f}
         ln -s ${SCRIPTDIR}/dots/${f} ~/.${f}
     fi
 done
