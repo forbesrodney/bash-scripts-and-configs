@@ -57,10 +57,10 @@ DOTS="${DOTS} profile"
 
 SCRIPTS="list_open_ports.sh"
 if [ ${OS} = "darwin" ]; then
-	SCRIPTS="${SCRIPTS} access.sh kick.sh"
+    SCRIPTS="${SCRIPTS} access.sh kick.sh"
 fi
 if [ ${OS} = "linux" ]; then
-	SCRIPTS="${SCRIPTS}"
+    SCRIPTS="${SCRIPTS}"
 fi
 
 oldpath=`pwd`
@@ -91,7 +91,7 @@ if ! [ -d bin ]; then
         echo "Creating bin"
         if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
             mkdir bin
-	fi
+    fi
     else
         echo "bin exists, but isn't a directory"
         exit

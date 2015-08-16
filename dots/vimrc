@@ -1,6 +1,6 @@
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
-  finish
+    finish
 endif
 
 " Use Vim settings, rather then Vi settings (much better!).
@@ -11,13 +11,13 @@ set nocompatible
 set vb
 
 set display=uhex,lastline
-"set shiftwidth=3 tabstop=3 expandtab
+"set shiftwidth=4 tabstop=4 expandtab
 "set list  listchars=tab:»·,trail:·
 set list  listchars=tab:>-,trail:-
 au FileType make setlocal noexpandtab
-au FileType c set shiftwidth=3 tabstop=3 expandtab nowrap
-au FileType cpp set shiftwidth=3 tabstop=3 expandtab nowrap
-au FileType java set shiftwidth=3 tabstop=3 expandtab nowrap
+au FileType c set shiftwidth=4 tabstop=4 expandtab nowrap
+au FileType cpp set shiftwidth=4 tabstop=4 expandtab nowrap
+au FileType java set shiftwidth=4 tabstop=4 expandtab nowrap
 
 " Change the ugly default colorscheme to something more pleasing to the eye
 " colo adam
@@ -68,26 +68,26 @@ set t_kD=
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
-  syntax on
-  set hlsearch
+    syntax on
+    set hlsearch
 endif
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
 
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
+    " Enable file type detection.
+    " Use the default filetype settings, so that mail gets 'tw' set to 72,
+    " 'cindent' is on in C files, etc.
+    " Also load indent files, to automatically do language-dependent indenting.
+    filetype plugin indent on
 
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
+    " For all text files set 'textwidth' to 78 characters.
+    autocmd FileType text setlocal textwidth=78
 
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  autocmd BufReadPost *
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it when the position is invalid or when inside an event handler
+    " (happens when dropping a file on gvim).
+    autocmd BufReadPost *
     \ if line("'\"") > 0 && line("'\"") <= line("$") |
     \   exe "normal g`\"" |
     \ endif
