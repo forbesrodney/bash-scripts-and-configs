@@ -57,7 +57,7 @@ DOTS="${DOTS} profile"
 
 SCRIPTS="list_open_ports.sh"
 if [ ${OS} = "darwin" ]; then
-    SCRIPTS="${SCRIPTS} access.sh kick.sh"
+    SCRIPTS="${SCRIPTS} ${OS}/access.sh ${OS}/kick.sh ${OS}/free.py"
 fi
 if [ ${OS} = "linux" ]; then
     SCRIPTS="${SCRIPTS}"
