@@ -11,7 +11,8 @@ The files in this project support OS/X and Linux as best they can as these are t
 
 #### Using These Files
 There is a script called create-links.sh in the root of this repo that can be used to create symbolic links to the other files as appropriate. Basically, it'll create links in ~/bin for all the scripts and links in ~/ for all the dot files.
-
+<pre>
   git clone git@github.com:snakepitsoftware/bash-scripts-and-configs.git
   cd bash-scripts-and-configs
   ./create-links.sh
+</pre>
