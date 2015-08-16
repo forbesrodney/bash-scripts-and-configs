@@ -40,38 +40,92 @@ fi
 SCRIPTDIR=`dirname "$0"`
 SCRIPTDIR=`exec 2>/dev/null;(cd -- "$SCRIPTDIR") && cd -- "$SCRIPTDIR"|| cd "$SCRIPTDIR"; unset PWD; /usr/bin/pwd || /bin/pwd || pwd`
 
+OS=$(uname -s | tr "[:upper:]" "[:lower:]")
+
 #
-# Configure files
+# Configure manifest information
 #
 
-# BASH
+# Non shell specific
+DOTS="digrc nslookuprc nofinger gitignore"
+# BASH shell
 DOTS="${DOTS} bash_profile bashrc bash_logout bash_alias"
-# SH
+# SH shell (including ash, dash, ...)
 DOTS="${DOTS} profile"
-# CSH
+# CSH (including tcsh)
 #DOTS="${DOTS} .cshrc .login .logout .alias"
-# Other
-DOTS="${DOTS} digrc nslookuprc nofinger gitignore"
+
+SCRIPTS="list_open_ports.sh"
+if [ ${OS} = "darwin" ]; then
+	SCRIPTS="${SCRIPTS} access.sh kick.sh"
+fi
+if [ ${OS} = "linux" ]; then
+	SCRIPTS="${SCRIPTS}"
+fi
 
 oldpath=`pwd`
 cd ~
+# Link the dot files
 for f in ${DOTS}; do
-    if [ -e .${f} ]; then
-        if ! [ -h .${f} ]; then
+    if [ -L .${f} ]; then
+        echo "Removing old link : .${f}"
+        if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
+            rm .${f}
+        fi
+    else
+        if [ -e .${f} ]; then
             echo "Skipping .${f} : file exists and is not a symbolic link"
             continue
-        fi
-        if [ -h .${f} ]; then
-            echo "Removing old link : .${f}"
-            if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-                rm ~/.${f}
-            fi
         fi
     fi
 
     echo "Creating new link : .${f} -> ${SCRIPTDIR}/dots/${f}"
     if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
         ln -s ${SCRIPTDIR}/dots/${f} ~/.${f}
+    fi
+done
+
+# Create the directories
+if ! [ -d bin ]; then
+    if ! [ -e bin ]; then
+        echo "Creating bin"
+        if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
+            mkdir bin
+	fi
+    else
+        echo "bin exists, but isn't a directory"
+        exit
+    fi
+fi
+if ! [ -d bin/${OS} ]; then
+    if ! [ -e bin/${OS} ]; then
+        echo "Creating bin/${OS}"
+        if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
+            mkdir -p bin/${OS}
+        fi
+    else
+        echo "bin/${OS} exists, but isn't a directory"
+        exit
+    fi
+fi
+
+# Link the scripts
+for f in ${SCRIPTS}; do
+    if [ -L bin/${f} ]; then
+        echo "Removing old link : bin/${f}"
+        if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
+            rm bin/${f}
+        fi
+    else
+        if [ -e bin/${f} ]; then
+            echo "Skipping bin/${f} : file exists and is not a symbolic link"
+            continue
+        fi
+    fi
+
+    echo "Creating new link : bin/${f} -> ${SCRIPTDIR}/scripts/${f}"
+    if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
+        ln -s ${SCRIPTDIR}/scripts/${f} ~/bin/${f}
     fi
 done
 cd ${oldpath}
