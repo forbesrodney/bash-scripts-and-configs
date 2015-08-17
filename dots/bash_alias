@@ -62,9 +62,9 @@ alias work='title "Working Window \(`hostname | cut -d. -f1`\)"'
 #
 
 alias ah='cut -f1 -d" " ~/.bash_history | sort | uniq -c | sort -nr | head -n 30'
-if [ ${KERNEL_NAME} = "linux" ]; then
-    alias make='pmake'
-fi
+#if [ ${KERNEL_NAME} = "linux" ]; then
+#    alias make='pmake'
+#fi
 if ! [ ${KERNEL_NAME} = "linux" ] && ! [ ${KERNEL_NAME} = "darwin" ]; then
     alias zmore='zcat \!* | more'
     alias zgrep='zcat \!:2 | grep -i \!:1'

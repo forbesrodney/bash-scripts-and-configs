@@ -210,7 +210,7 @@ fi
 ### Environment Variables ###
 #############################
 # cd search path
-export CDPATH="~:~/Development"
+export CDPATH=".:~:~/Development"
 
 # Ignore duplicates and ls (with no arguments) as well as built-ins like bg, fg and exit
 export HISTIGNORE="&:[ ]*:ls:[bf]g:exit"
