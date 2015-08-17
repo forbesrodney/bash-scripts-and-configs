@@ -25,16 +25,16 @@ alias ealias='/usr/bin/vi ~/.bash_alias;unalias -a;. ~/.bash_alias'
 alias realias='unalias -a;. ~/.bash_alias'
 
 # always enable color and flags
-if [ ${OS} = "linux" ]; then
+if [ ${KERNEL_NAME} = "linux" ]; then
     alias ls='ls --color=auto -F'
-elif [ ${OS} = "darwin" ]; then
+elif [ ${KERNEL_NAME} = "darwin" ]; then
     alias ls='ls -GF'
 else
     alias ls='ls -F'
 fi
 
 # extra information when available
-if [ ${OS} = "darwin" ]; then
+if [ ${KERNEL_NAME} = "darwin" ]; then
     alias dir='ls -lhO@e'
 else
     alias dir='ls -lh'
@@ -62,10 +62,10 @@ alias work='title "Working Window \(`hostname | cut -d. -f1`\)"'
 #
 
 alias ah='cut -f1 -d" " ~/.bash_history | sort | uniq -c | sort -nr | head -n 30'
-if [ ${OS} = "linux" ]; then
+if [ ${KERNEL_NAME} = "linux" ]; then
     alias make='pmake'
 fi
-if ! [ ${OS} = "linux" ] && ! [ ${OS} = "darwin" ]; then
+if ! [ ${KERNEL_NAME} = "linux" ] && ! [ ${KERNEL_NAME} = "darwin" ]; then
     alias zmore='zcat \!* | more'
     alias zgrep='zcat \!:2 | grep -i \!:1'
 fi

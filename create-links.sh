@@ -40,7 +40,7 @@ fi
 SCRIPTDIR=`dirname "$0"`
 SCRIPTDIR=`exec 2>/dev/null;(cd -- "$SCRIPTDIR") && cd -- "$SCRIPTDIR"|| cd "$SCRIPTDIR"; unset PWD; /usr/bin/pwd || /bin/pwd || pwd`
 
-OS=$(uname -s | tr "[:upper:]" "[:lower:]")
+KERNEL_NAME=$(uname -s | tr "[:upper:]" "[:lower:]")
 
 #
 # Configure manifest information
@@ -56,10 +56,10 @@ DOTS="${DOTS} profile"
 #DOTS="${DOTS} .cshrc .login .logout .alias"
 
 SCRIPTS="list_open_ports.sh"
-if [ ${OS} = "darwin" ]; then
-    SCRIPTS="${SCRIPTS} ${OS}/access.sh ${OS}/kick.sh ${OS}/free.py"
+if [ ${KERNEL_NAME} = "darwin" ]; then
+    SCRIPTS="${SCRIPTS} ${PLATFORM}/access.sh ${OS}/kick.sh ${OS}/free.py"
 fi
-if [ ${OS} = "linux" ]; then
+if [ ${KERNEL_NAME} = "linux" ]; then
     SCRIPTS="${SCRIPTS}"
 fi
 
@@ -97,14 +97,14 @@ if ! [ -d bin ]; then
         exit
     fi
 fi
-if ! [ -d bin/${OS} ]; then
-    if ! [ -e bin/${OS} ]; then
-        echo "Creating bin/${OS}"
+if ! [ -d bin/${KERNEL_NAME} ]; then
+    if ! [ -e bin/${KERNEL_NAME} ]; then
+        echo "Creating bin/${KERNEL_NAME}"
         if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-            mkdir -p bin/${OS}
+            mkdir -p bin/${KERNEL_NAME}
         fi
     else
-        echo "bin/${OS} exists, but isn't a directory"
+        echo "bin/${KERNEL_NAME} exists, but isn't a directory"
         exit
     fi
 fi

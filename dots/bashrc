@@ -39,24 +39,12 @@ if [ -n ${BASH:-""} ]; then
     [ -r /etc/bashrc ] && . /etc/bashrc
 fi
 
-# These are used in conjunction with $OSTYPE to allow one set of dot files to be
-# used on many platforms.
-#       On OS/X Yosemite (10.4) :
-#           $OSTYPE == "darwin14"
-#           $OS     == "darwin"
-#           #REL    == "14.4.0"
-#       On Lubuntu 15.04 :
-#           $OSTYPE == "linux-gnu"
-#           $OS     == "linux"
-#           $REL    == "3.19.0-25-generic"
-#
-# This isn't perfect. Ultimately what would be most useful would be something
-# like ...
-#       $ARCH     == "x64"
-#       $PLATFORM == "linux"
-#       $KERNEL   == "3.19.0"
-#       $DISTRO   == "lubuntu"
-#       $RELEASE  == "15.04"
+# Ultimately what would be most useful would be something like ...
+#       $KERNEL_ARCH == "x64"
+#       $KERNEL_NAME == "linux"
+#       $KERNEL_VERS == "3.19.0"
+#       $DISTRO      == "lubuntu"
+#       $RELEASE     == "15.04"
 #
 # uname can provide some of this information, but it's not consistant across
 # platforms.
@@ -78,8 +66,50 @@ fi
 # Other kind of hackish methods include using the contents of files like
 # /etc/issue and /etc/version
 #
-export OS=$(uname -s | tr "[:upper:]" "[:lower:]")
-export REL=$(uname -r)
+# /bin/bash provides ...
+#       On OS/X Yosemite (10.4) :
+#            $HOSTTYPE == x86_64
+#            $MACHTYPE == x86_64-apple-darwin14
+#            $OSTYPE   == darwin14
+#       On Lubuntu 15.04 :
+#            $HOSTTYPE == x86_64
+#            $MACHTYPE == x86_64-pc-linux-gnu
+#            $OSTYPE   == linux-gnu
+#
+
+# These two seem to be reliable and straight forward
+export KERNEL_NAME=$(uname -s | tr "[:upper:]" "[:lower:]")
+KERNEL_ARCH=$(getconf LONG_BIT)
+if [ ${KERNEL_ARCH} = 64 ]; then
+    export KERNEL_ARCH="x64"
+else
+    export KERNEL_ARCH="x86"
+fi
+
+# These however are not, but I'm really not using any of these yet
+#if [ ${KERNEL_NAME} = "darwin" ]; then
+#    export KERNEL_VERS=$(uname -r)
+#    export DISTRO="Mac OS/X"
+#    export RELEASE=$(sw_vers -productVersion)
+#elif [ ${KERNEL_NAME} = "linux" ]; then
+#    export KERNEL_VERS=$(uname -r)
+#    if [ -f /etc/lsb-release ]; then
+#        . /etc/lsb-release
+#        export DISTRO=$DISTRIB_ID
+#        export RELEASE=$DISTRIB_RELEASE
+#    elif [ -f /etc/debian_version ]; then
+#        export DISTRO=Debian  # XXX or Ubuntu??
+#        export RELEASE=$(cat /etc/debian_version)
+#    elif [ -f /etc/redhat-release ]; then
+#        OS_MAJOR_VERSION=`sed -rn 's/.*([0-9])\.[0-9].*/\1/p' /etc/redhat-release`
+#        OS_MINOR_VERSION=`sed -rn 's/.*[0-9].([0-9]).*/\1/p' /etc/redhat-release`
+#        export DISTRO="RedHat"
+#        export RELEASE="${OS_MAJOR_VERSION}.${OS_MINOR_VERSION}"
+#    else
+#        export DISTRO=$(uname -s)
+#        export RELEASE=$(uname -r)
+#    fi
+#fi
 
 #####################
 ### Shell Options ###
