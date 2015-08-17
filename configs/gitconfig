@@ -15,99 +15,103 @@
 #
 
 [user]
-	#
-	# Put your user information here
-	#
-	#name = 
-	#email = 
-	#signingkey = 
+    #
+    # Put your user information here
+    #
+    #name = 
+    #email = 
+    #signingkey = 
 
 [core]
-	excludesfile = /Users/forbesr/.gitignore
-	editor = vim
-	whitespace = trailing-space,space-before-tab
+    excludesfile = /Users/forbesr/.gitignore
+    editor = vim
+    whitespace = trailing-space,space-before-tab
 
 [advice]
-	pushNonFastForward = false
-	statusHints = false
+    pushNonFastForward = false
+    statusHints = false
 
 [color]
-	ui = auto
+    ui = auto
 
 [color "branch"]
-        current = yellow reverse
-        local = yellow
-        remote = green
+    current = yellow reverse
+    local = yellow
+    remote = green
 
 [color "diff"]
-        meta = yellow bold
-        frag = magenta bold
-        old = red bold
-        new = green bold
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
 
 [color "status"]
-        added = yellow
-        changed = green
-        untracked = cyan
+    added = yellow
+    changed = green
+    untracked = cyan
 
 [push]
-	default = simple
+    default = simple
 
 [log]
-	decorate = short
-	abbrevCommit = true
+    decorate = short
+    abbrevCommit = true
 
 [format]
-	pretty = oneline
+    pretty = oneline
 
 [branch]
-	autosetupmerge = true
+    autosetupmerge = true
 
 [merge]
-	stat = true
+    stat = true
 
 [diff]
-	#mnemonicprefix = true
-	renames = copies
+    #mnemonicprefix = true
+    renames = copies
 
 [alias]
-   lg = log --graph --pretty=format:'%Cred%h%Creset %C(yellow)%an%d%Creset %s %Cgreen(%cr)%Creset' --date=relative
-   qpush = "!git push origin \"$(git rev-parse --abbrev-ref HEAD)\""
-   qpull = "!git pull origin \"$(git rev-parse --abbrev-ref HEAD)\""
-   #pr = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/pull/new/$(git rev-parse --abbrev-ref HEAD)\""
-   #gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
+    lg = log --graph --pretty=format:'%Cred%h%Creset %C(yellow)%an%d%Creset %s %Cgreen(%cr)%Creset' --date=relative
+    qpush = "!git push origin \"$(git rev-parse --abbrev-ref HEAD)\""
+    qpull = "!git pull origin \"$(git rev-parse --abbrev-ref HEAD)\""
+    #pr = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/pull/new/$(git rev-parse --abbrev-ref HEAD)\""
+    #gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
 
 [filter "lfs"]
-	clean = git-lfs clean %f
-	smudge = git-lfs smudge %f
-	required = true
+    clean = git-lfs clean %f
+    smudge = git-lfs smudge %f
+    required = true
 
 [diff]
-	tool = Kaleidoscope
+    tool = Kaleidoscope
 
 [merge]
-	tool = Kaleidoscope
+    tool = Kaleidoscope
 
 #
 # Added by Kaleidoscope
 #
 [difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+    cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+
 [difftool]
-	prompt = false
+    prompt = false
+
 [mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustExitCode = true
+    cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+    trustExitCode = true
+
 [mergetool]
-	prompt = false
-	keepBackup = true
+    prompt = false
+    keepBackup = true
 #
 # Added by SourceTree
 #
 [difftool "sourcetree"]
-	cmd = /usr/local/bin/ksdiff -w \"$LOCAL\" \"$REMOTE\"
-	path = 
+    cmd = /usr/local/bin/ksdiff -w \"$LOCAL\" \"$REMOTE\"
+    path = 
+
 [mergetool "sourcetree"]
-	cmd = /usr/local/bin/ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustExitCode = true
+    cmd = /usr/local/bin/ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+    trustExitCode = true
 
