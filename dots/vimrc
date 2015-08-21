@@ -57,9 +57,9 @@ map Q gq
 vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
 
 " Fix the messed up <BS> and <DEL>
-inoremap  
-set t_kb=
-set t_kD=
+"inoremap  
+"set t_kb=
+"set t_kD=
 
 " This is an alternative that also works in block mode, but the deleted
 " text is lost and it only works for putting the current register.

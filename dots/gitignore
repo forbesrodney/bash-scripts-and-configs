@@ -22,7 +22,6 @@
 .TemporaryItems
 .VolumeIcon.icns
 .DocumentRevisions-V100
-Icon?
 
 # Vim temporary files that need to always get ignored
 *~
