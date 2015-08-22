@@ -20,7 +20,7 @@ if [ -d ${HOME}/bin ]; then
 fi
 
 if [ ${KERNEL_NAME} == "darwin" ]; then
-    PATH="/usr/local/git/bin:${PATH}"
+    PATH="/Users/forbesr/Qt5.2.1/5.2.1/clang_64/bin:${PATH}"
 fi
 
 if [ ${KERNEL_NAME} == "linux" ]; then
