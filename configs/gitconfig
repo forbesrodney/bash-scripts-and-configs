@@ -15,103 +15,14 @@
 #
 
 [user]
-    #
-    # Put your user information here
-    #
-    #name = 
-    #email = 
+    name = 5n4k3
+    email = 5n4k3@snakepitsoftware.com
     #signingkey = 
 
 [core]
-    excludesfile = /Users/forbesr/.gitignore
-    editor = vim
-    whitespace = trailing-space,space-before-tab
+    excludesfile = /home/5n4k3/.gitignore
 
-[advice]
-    pushNonFastForward = false
-    statusHints = false
-
-[color]
-    ui = auto
-
-[color "branch"]
-    current = yellow reverse
-    local = yellow
-    remote = green
-
-[color "diff"]
-    meta = yellow bold
-    frag = magenta bold
-    old = red bold
-    new = green bold
-
-[color "status"]
-    added = yellow
-    changed = green
-    untracked = cyan
-
-[push]
-    default = simple
-
-[log]
-    decorate = short
-    abbrevCommit = true
-
-[format]
-    pretty = oneline
-
-[branch]
-    autosetupmerge = true
-
-[merge]
-    stat = true
-
-[diff]
-    #mnemonicprefix = true
-    renames = copies
-
-[alias]
-    lg = log --graph --pretty=format:'%Cred%h%Creset %C(yellow)%an%d%Creset %s %Cgreen(%cr)%Creset' --date=relative
-    qpush = "!git push origin \"$(git rev-parse --abbrev-ref HEAD)\""
-    qpull = "!git pull origin \"$(git rev-parse --abbrev-ref HEAD)\""
-    #pr = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/pull/new/$(git rev-parse --abbrev-ref HEAD)\""
-    #gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
-
-[filter "lfs"]
-    clean = git-lfs clean %f
-    smudge = git-lfs smudge %f
-    required = true
-
-[diff]
-    tool = Kaleidoscope
-
-[merge]
-    tool = Kaleidoscope
-
-#
-# Added by Kaleidoscope
-#
-[difftool "Kaleidoscope"]
-    cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-
-[difftool]
-    prompt = false
-
-[mergetool "Kaleidoscope"]
-    cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-    trustExitCode = true
-
-[mergetool]
-    prompt = false
-    keepBackup = true
-#
-# Added by SourceTree
-#
-[difftool "sourcetree"]
-    cmd = /usr/local/bin/ksdiff -w \"$LOCAL\" \"$REMOTE\"
-    path = 
-
-[mergetool "sourcetree"]
-    cmd = /usr/local/bin/ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-    trustExitCode = true
+[include]
+    path = /home/5n4k3/.gitconfig_common
+    path = /home/5n4k3/.gitconfig_linux
 
