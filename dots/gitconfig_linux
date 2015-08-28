@@ -24,10 +24,8 @@ tool = deltawalker
 tool = deltawalker
 
 [mergetool  "deltawalker"]
-path = '/opt/deltawalker/git-merge'
 cmd = '/opt/deltawalker/git-merge' "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
 
 [difftool "deltawalker"]
-path = "/opt/deltawalker/git-diff"
-cmd = '/opt/deltawalker/git-diff' "$BASE" "$LOCAL"
+cmd = '/opt/deltawalker/git-diff' blah "$LOCAL" blah blah "$BASE"
 
