@@ -57,13 +57,6 @@
 [branch]
     autosetupmerge = true
 
-[merge]
-    stat = true
-
-[diff]
-    #mnemonicprefix = true
-    renames = copies
-
 [alias]
     lg = log --graph --pretty=format:'%Cred%h%Creset %C(yellow)%an%d%Creset %s %Cgreen(%cr)%Creset' --date=relative
     qpush = "!git push origin \"$(git rev-parse --abbrev-ref HEAD)\""
@@ -75,4 +68,18 @@
     clean = git-lfs clean %f
     smudge = git-lfs smudge %f
     required = true
+
+[merge]
+    stat = true
+
+[diff]
+    #mnemonicprefix = true
+    renames = copies
+
+[difftool]
+    prompt = false
+
+[mergetool]
+    prompt = false
+    keepBackup = true
 
