@@ -18,10 +18,10 @@
 #
 
 [diff]
-tool = deltawalker
+tool = ultracompare
 
 [merge]
-tool = deltawalker
+tool = ultracompare
 
 [mergetool  "deltawalker"]
 cmd = '/opt/deltawalker/git-merge' "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
@@ -29,3 +29,8 @@ cmd = '/opt/deltawalker/git-merge' "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
 [difftool "deltawalker"]
 cmd = '/opt/deltawalker/git-diff' blah "$LOCAL" blah blah "$BASE"
 
+[mergetool  "ultracompare"]
+cmd = '/usr/bin/ucx' -3 "$LOCAL" "$REMOTE" "$BASE" -o "$MERGED"
+
+[difftool "ultracompare"]
+cmd = '/usr/bin/ucx' -t "$LOCAL" "$REMOTE"
