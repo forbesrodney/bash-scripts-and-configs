@@ -28,6 +28,11 @@
 .*.swp
 .*.swo
 
+.qmake.cache
+
+*.o
+moc_*.cpp
+
 /*.sublime-project
 /*.sublime-workspace
 /*.esproj
