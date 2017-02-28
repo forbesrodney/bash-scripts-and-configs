@@ -59,23 +59,28 @@
     autosetupmerge = true
 
 [alias]
-    log-g     = log --graph
-    ll        = log --decorate=full --pretty=medium --no-abbrev-commit --date=relative
-    ll-g      = log --decorate=full --pretty=medium --no-abbrev-commit --date=relative --graph
+    # Abbreviations for some common commands
+    br               = branch 
+    co               = checkout
+    di               = diff
+    st               = status
+
+    # Specialized log output
+    log-g            = log --graph
+    ll               = log --decorate=full --pretty=medium --no-abbrev-commit --date=relative
+    ll-g             = log --decorate=full --pretty=medium --no-abbrev-commit --date=relative --graph
 
     #qpush     = "!git push origin \"$(git rev-parse --abbrev-ref HEAD)\""
     #qpull     = "!git pull origin \"$(git rev-parse --abbrev-ref HEAD)\""
     #pr = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/pull/new/$(git rev-parse --abbrev-ref HEAD)\""
     #gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
     #
-    amend     = commit --amend -a
-    br        = branch 
-    co        = checkout
-    di        = diff
-    ds        = diff --staged
-    fetchall  = fetch -v --all
-    st        = status
-    wdiff     = diff --word-diff=plain
+    amend            = commit --amend -a
+    ds               = diff --staged
+    fetchall         = fetch -v --all
+    wdiff            = diff --word-diff=plain
+    untag            = !f() { git tag -d $1; git push --delete origin $1; }
+    showtagsbydate   = log --tags --simplify-by-decoration --pretty=\"format:%ai %d\"
 
 [filter "lfs"]
     clean = git-lfs clean %f

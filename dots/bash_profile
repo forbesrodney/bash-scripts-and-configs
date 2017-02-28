@@ -22,14 +22,9 @@ if [ -d ${HOME}/bin ]; then
     PATH=${HOME}/bin/${KERNEL_NAME}:${HOME}/bin:${PATH}
 fi
 
-# set PATH to include Qt
-if [ ${KERNEL_NAME} == "darwin" ]; then
-    PATH=/Users/forbesr/Qt5.2.1/5.2.1/clang_64/bin:${PATH}
-fi
 
-if [ ${KERNEL_NAME} == "linux" ]; then
-    PATH=/usr/local/Qt-5.4.2/bin/:${PATH}
-fi
+# Be sure to include local settings.
+[ -f ~/.bash_profile_local ] && . ~/.bash_profile_local
 
 export PATH
 
