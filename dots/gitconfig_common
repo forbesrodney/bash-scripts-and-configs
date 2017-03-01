@@ -69,6 +69,12 @@
     log-g            = log --graph
     ll               = log --decorate=full --pretty=medium --no-abbrev-commit --date=relative
     ll-g             = log --decorate=full --pretty=medium --no-abbrev-commit --date=relative --graph
+    showtagsbydate   = log --date-order --tags --simplify-by-decoration --pretty='format:%C(green)%ad %C(red)%h %C(reset)%D' --date=format:'%Y-%m-%d %H:%M:%S'
+
+    # Specialized diff output
+    ds               = diff --staged
+    dc               = diff --cached
+    dw               = diff --word-diff=plain
 
     #qpush     = "!git push origin \"$(git rev-parse --abbrev-ref HEAD)\""
     #qpull     = "!git pull origin \"$(git rev-parse --abbrev-ref HEAD)\""
@@ -76,11 +82,15 @@
     #gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
     #
     amend            = commit --amend -a
-    ds               = diff --staged
     fetchall         = fetch -v --all
-    wdiff            = diff --word-diff=plain
-    untag            = !f() { git tag -d $1; git push --delete origin $1; }
-    showtagsbydate   = log --tags --simplify-by-decoration --pretty=\"format:%ai %d\"
+    untag            = "!f() { git tag -d $1; git push --delete origin $1; }; f"
+    # Unstage any files that have been added to the staging area
+    unstage          = reset HEAD
+    # Push the current branch to the remote "origin", and set it to track
+    # the upstream branch
+    publish          = "!git push -u origin $(git branch-name)"
+    # Delete the remote version of the current branch
+    unpublish        = "!git push origin :$(git branch-name)"
 
 [filter "lfs"]
     clean = git-lfs clean %f
