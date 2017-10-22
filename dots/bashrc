@@ -199,11 +199,18 @@ function getshortenedpath() {
             }' home=$HOME
 }
 
-if [ ${SHLVL} -eq 1 ];
-then
-    export PS1="[\\u@\\h][\$(getshortenedpath)]\\$"
+function getgitinformation() {
+    if [[ $(git rev-parse --git-dir 2> /dev/null) ]]; then
+        GITPROMPT="[$(git rev-parse --abbrev-ref HEAD)]"
+        # git status --untracked-files=all --ignore-submodules=all --porcelain --branch
+    fi
+    echo ${GITPROMPT:=""}
+}
+
+if [ ${SHLVL} -eq 1 ]; then
+    export PS1="[\\u@\\h][\$(getshortenedpath)]\$(getgitinformation)\\$"
 else
-    export PS1="[\\u@\\h][\$(getshortenedpath)][${SHLVL}]\\$"
+    export PS1="[\\u@\\h][\$(getshortenedpath)]\$(getgitinformation)[${SHLVL}]\\$"
 fi
 
 #############################
