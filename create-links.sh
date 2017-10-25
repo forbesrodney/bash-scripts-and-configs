@@ -129,3 +129,6 @@ for f in ${SCRIPTS}; do
     fi
 done
 cd ${oldpath}
+
+curl https://raw.githubusercontent.com/gdbinit/Gdbinit/master/gdbinit > ~/.gdbinit
+curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > ~/bin/git-prompt.sh
