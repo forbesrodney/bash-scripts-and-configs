@@ -239,6 +239,7 @@ export TERM='xterm'
 export VISUAL='vim'
 export EDITOR="$VISUAL"
 export GIT_EDITOR="$VISUAL"
+export SUDO_EDITOR="$VISUAL"
 
 #
 # Aliases
