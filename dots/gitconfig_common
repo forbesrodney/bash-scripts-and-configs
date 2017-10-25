@@ -83,9 +83,12 @@
     #
     amend            = commit --amend -a
     fetchall         = fetch -v --all
+    #tag             = "!f() { git tag -a $1 -m "$1"; git push origin $1; }; f"
     untag            = "!f() { git tag -d $1; git push --delete origin $1; }; f"
     # Unstage any files that have been added to the staging area
     unstage          = reset HEAD
+    # Un-add any files that were mistakenly added
+    unadd            = reset
     # Push the current branch to the remote "origin", and set it to track
     # the upstream branch
     publish          = "!git push -u origin $(git branch-name)"
