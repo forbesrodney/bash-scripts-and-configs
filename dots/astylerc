@@ -1,0 +1,176 @@
+#
+# The Creative Commons Attribution 4.0 International License (CC-BY)
+#
+# Copyright (c) 2018 Snakepit Software
+# Author: Rodney C Forbes   <5n4k3@snakepitsoftware.com>
+#
+# This work is licensed under the Creative Commons Attribution
+# 4.0 International License. To view a copy of this license,
+# visit http://creativecommons.org/licenses/by/4.0/.
+#
+
+# Examples below stolen from the documentation for astyle and perhaps slightly
+# modified.
+
+################################################################################
+# Adjust the general behavior of the tool
+################################################################################
+
+--recursive
+--suffix=none
+--preserve-date
+--formatted
+
+################################################################################
+
+################################################################################
+# A good starting point for adjusting style/formatting
+################################################################################
+
+--style=attach
+#--attach-namespaces
+#--attach-classes
+#--attach-inlines
+#--attach-extern-c
+#--attach-closing-while
+--indent=spaces=4
+--convert-tabs
+--add-braces
+--max-code-length=200
+--lineend=linux
+
+# int Foo(bool isBar) {
+#     if (isBar) {
+#         bar();
+#         return 1;
+#     } else {
+#         return 0;
+#     }
+# }
+
+################################################################################
+
+################################################################################
+# Fixup classes
+################################################################################
+
+--indent-classes
+--indent-modifiers
+
+# class Foo {
+#     public:
+#         Foo();
+#         virtual ~Foo();
+# };
+
+################################################################################
+
+################################################################################
+# Fixup switches
+################################################################################
+
+--indent-switches
+--indent-cases
+
+# switch (foo) {
+#     case 1:
+#         a += 1;
+#         break;
+#
+#     case 2:
+#         {
+#             a += 2;
+#             break;
+#         }
+# }
+
+################################################################################
+
+################################################################################
+# Fixup namespaces
+################################################################################
+
+--indent-namespaces
+
+# namespace foospace {
+#     class Foo {
+#         public:
+#             Foo();
+#             virtual ~Foo();
+#     };
+# }
+
+################################################################################
+
+################################################################################
+# Fixup some padding
+################################################################################
+
+--pad-header
+--unpad-paren
+
+# if (isFoo((a+2), b)) { /*for, while, ...*/
+#     bar(a, b);
+# }
+
+################################################################################
+
+################################################################################
+# Fixup some alignment/indentation issues
+################################################################################
+
+--align-pointer=type
+--align-reference=type
+
+# char* foo1;
+# char& foo2;
+
+--break-after-logical
+
+# if (thisVariable1 == thatVariable1 ||
+#     thisVariable2 == thatVariable2 ||
+#     thisVariable3 == thatVariable3)
+# {
+#     bar();
+# }
+
+--min-conditional-indent=0
+
+# if (a < b
+#     || c > d) {
+#     foo++;
+# }
+
+--max-instatement-indent=120
+
+# fooArray[] = { red,
+#                green,
+#                blue };
+
+# fooFunction(barArg1,
+#             barArg2,
+#             barArg3);
+
+################################################################################
+
+################################################################################
+# Fixup some preprocessor issues
+################################################################################
+
+--indent-preproc-block
+
+# #ifdef _WIN32
+#     #include <windows.h>
+#     #ifndef NO_EXPORT
+#         #define EXPORT
+#     #endif
+# #endif
+
+--indent-preproc-define
+
+# #define Is_Bar(arg,a,b) \
+#     (Is_Foo((arg), (a)) \
+#     || Is_Foo((arg), (b)))
+
+################################################################################
+

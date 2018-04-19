@@ -47,7 +47,7 @@ KERNEL_NAME=$(uname -s | tr "[:upper:]" "[:lower:]")
 #
 
 # Non shell specific
-DOTS="digrc nslookuprc nofinger gitignore vimrc gitconfig_common gitconfig_mac gitconfig_linux"
+DOTS="digrc nslookuprc nofinger gitignore vimrc gitconfig_common gitconfig_mac gitconfig_linux astylerc inputrc"
 # BASH shell
 DOTS="${DOTS} bash_profile bashrc bash_logout bash_alias"
 # SH shell (including ash, dash, ...)
