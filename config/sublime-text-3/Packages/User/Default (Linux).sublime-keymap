@@ -1,0 +1,4 @@
+[
+    { "keys": ["ctrl+shift+c"], "command": "build", "args": { "variant": "clean" } },
+    { "keys": ["ctrl+shift+s"], "command": "save_all" }
+]

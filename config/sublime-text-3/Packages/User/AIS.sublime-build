@@ -1,0 +1,23 @@
+{
+  "shell_cmd": "make",
+  "working_dir": "${project_path}",
+  "variants":
+  [
+    {
+      "shell_cmd": "make clean",
+      "name": "Clean"
+    },
+    {
+      "shell_cmd": "make gitclean",
+      "name": "Clean All"
+    },
+    {
+      "shell_cmd": "git status",
+      "name": "Status"
+    },
+    {
+      "shell_cmd": "make gitclean; /opt/Qt/5.1.1/gcc/bin/qmake -r; make",
+      "name": "Rebuild All"
+    },
+  ]
+}

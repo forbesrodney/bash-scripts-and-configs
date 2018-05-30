@@ -1,0 +1,6 @@
+{
+    "patterns": {
+        "TODO": "TODO[\\s]*?:+(?P<todo>.*)$",
+        "RCF": "RCF[\\s]*?:+(?P<rcf>.*)$"
+    }
+}
