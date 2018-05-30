@@ -190,13 +190,13 @@ shopt -u xpg_echo
 #   /dir1/dir2/dir3/dir4/dir5  = /dir1/.../dir3/dir4/dir5
 #   ~/dir1/dir2/dir3/dir4/dir5 = ~/dir1/.../dir3/dir4/dir5
 function getshortenedpath() {
-    pwd | awk -v num_elem=5 '// {
+    pwd | awk -v home=$HOME -v num_elem=5 '// {
             sub(home,"~",$0);
             n = split($0, x, "/");
-            s = ((n <= $num_elem)? $0: x[1] "/" x[2] "/.../" x[n-1] "/" x[n]);
+            s = ((n <= num_elem)? $0: x[1] "/" x[2] "/.../" x[n-1] "/" x[n]);
             print s;
             exit (0);
-            }' home=$HOME
+            }'
 }
 
 function getgitinformation() {
