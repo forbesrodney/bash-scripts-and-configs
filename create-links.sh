@@ -91,7 +91,8 @@ if ! [ -d bin ]; then
         echo "Creating bin"
         if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
             mkdir bin
-    fi
+            chmod 755 bin
+        fi
     else
         echo "bin exists, but isn't a directory"
         exit
@@ -102,6 +103,7 @@ if ! [ -d bin/${KERNEL_NAME} ]; then
         echo "Creating bin/${KERNEL_NAME}"
         if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
             mkdir -p bin/${KERNEL_NAME}
+            chmod 755 bin/${KERNEL_NAME}
         fi
     else
         echo "bin/${KERNEL_NAME} exists, but isn't a directory"
@@ -131,7 +133,9 @@ done
 cd ${oldpath}
 
 curl https://raw.githubusercontent.com/gdbinit/Gdbinit/master/gdbinit > ~/.gdbinit
+chmod 644 ~/.gdbinit
 curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > ~/bin/git-prompt.sh
+chmod 755 ~/bin/git-prompt.sh
 
 echo "**************************************************************"
 echo "* Don't forget to copy and modify gitconfig to ~/.gitconfig. *"

@@ -9,6 +9,8 @@
 # visit http://creativecommons.org/licenses/by/4.0/.
 #
 
+set bell-style visible
+
 # These were contributed by Brodie Davis
 ## arrow up
 "\e[A":history-search-backward
