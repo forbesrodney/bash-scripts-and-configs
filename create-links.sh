@@ -137,6 +137,7 @@ chmod 644 ~/.gdbinit
 curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > ~/bin/git-prompt.sh
 chmod 755 ~/bin/git-prompt.sh
 
+echo
 echo "**************************************************************"
 echo "* Don't forget to copy and modify gitconfig to ~/.gitconfig. *"
 echo "**************************************************************"

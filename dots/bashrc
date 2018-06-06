@@ -187,8 +187,8 @@ shopt -u xpg_echo
 ### Prompt Related ###
 ######################
 # Shorten the working directory for our prompt
-#   /dir1/dir2/dir3/dir4/dir5  = /dir1/.../dir3/dir4/dir5
-#   ~/dir1/dir2/dir3/dir4/dir5 = ~/dir1/.../dir3/dir4/dir5
+#   /dir1/dir2/dir3/dir4/dir5  = /dir1/.../dir4/dir5
+#   ~/dir1/dir2/dir3/dir4/dir5 = ~/dir1/.../dir4/dir5
 function getshortenedpath() {
     pwd | awk -v home=$HOME -v num_elem=5 '// {
             sub(home,"~",$0);
@@ -261,6 +261,14 @@ export SUDO_EDITOR="$VISUAL"
 #
 # Functions
 #
+
+function pushd() {
+    if [[ $# -gt 0 ]]; then
+        command pushd $*
+    else
+        command pushd ~
+    fi
+}
 
 function pdir() { dir $* | more; }
 
