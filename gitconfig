@@ -20,9 +20,11 @@
     #signingkey = 
 
 [core]
-    excludesfile = /home/5n4k3/.gitignore
+    excludesfile = ~/.gitignore
 
 [include]
-    path = /home/5n4k3/.gitconfig_common
-    path = /home/5n4k3/.gitconfig_linux
+    path = ~/.gitconfig_common
+    path = ~/.gitconfig_linux
+    #path = ~/.gitconfig_mac
+    #path = ~/.gitconfig_windows
 
