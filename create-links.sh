@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # The MIT License (MIT)
@@ -27,7 +27,7 @@
 
 # We still need this.
 # [[ -n "$WINDIR" ]]
-function windows() { [ ${OS} = "Windows_NT" ]; }
+function windows() { [ "${OS}" = "Windows_NT" ]; }
 
 # Cross-platform symlink function. With one parameter, it will check
 # whether the parameter is a symlink. With two parameters, it will create
@@ -36,24 +36,24 @@ function link() {
     local link_target=$1
     local link_source=$2
 
-    if [[ $# -lt 2 ]]; then
+    if [ $# -lt 2 ]; then
         # Check link
         if windows; then
             fsutil reparsepoint query "${link_source}" > /dev/null
         else
-            [[ -h "${link_source}" ]]
+            [ -h "${link_source}" ]
         fi
     else
         # Create link
         if windows; then
             # Note : Windows needs to be told if it's a directory or not
             # Note : We need to convert `/` to `\`
-			# Note : The parameters to Windows mklink command are backwards
+            # Note : The parameters to Windows mklink command are backwards
             if [ -d "${link_target}" ]; then
                 cmd <<< "mklink /D \"${link_source}\" \"${link_target//\//\\}\"" > /dev/null
             else
                 cmd <<< "mklink \"${link_source}\" \"${link_target//\//\\}\"" > /dev/null
-			fi
+            fi
         else
             ln -s "${link_target}" "${link_source}"
         fi
@@ -62,7 +62,7 @@ function link() {
 
 # Remove a link, cross-platform.
 function rmlink() {
-	local link_source=$1
+    local link_source=$1
 
     if windows; then
         # Again, Windows needs to be told if it's a file or directory.
@@ -86,12 +86,12 @@ if [ "$#" -ne 0 ]; then
 fi
 
 # Not as portable as I'd like
-#SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+#SCRIPTDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 SCRIPTDIR=`dirname "$0"`
 SCRIPTDIR=`exec 2>/dev/null;(cd -- "$SCRIPTDIR") && cd -- "$SCRIPTDIR"|| cd "$SCRIPTDIR"; unset PWD; /usr/bin/pwd || /bin/pwd || pwd`
 if windows; then
-	SCRIPTDIR=C:${SCRIPTDIR:2}
+    SCRIPTDIR=C:${SCRIPTDIR:2}
 fi
 #echo ${SCRIPTDIR}
 
@@ -135,7 +135,7 @@ for f in ${DOTS}; do
 
     echo "Creating new link : ~/.${f} -> ${SCRIPTDIR}/dots/${f}"
     if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-		link ${SCRIPTDIR}/dots/${f} .${f}
+        link ${SCRIPTDIR}/dots/${f} .${f}
     fi
 done
 
@@ -181,7 +181,7 @@ for f in ${SCRIPTS}; do
 
     echo "Creating new link : ~/bin/${f} -> ${SCRIPTDIR}/scripts/${f}"
     if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-		link ${SCRIPTDIR}/scripts/${f} bin/${f}
+        link ${SCRIPTDIR}/scripts/${f} bin/${f}
     fi
 done
 popd > /dev/null
