@@ -25,6 +25,57 @@
 # SOFTWARE.
 #
 
+# We still need this.
+# [[ -n "$WINDIR" ]]
+function windows() { [ ${OS} = "Windows_NT" ]; }
+
+# Cross-platform symlink function. With one parameter, it will check
+# whether the parameter is a symlink. With two parameters, it will create
+# a symlink to a file or directory, with syntax: link $linkname $target
+function link() {
+    local link_target=$1
+    local link_source=$2
+
+    if [[ $# -lt 2 ]]; then
+        # Check link
+        if windows; then
+            fsutil reparsepoint query "${link_source}" > /dev/null
+        else
+            [[ -h "${link_source}" ]]
+        fi
+    else
+        # Create link
+        if windows; then
+            # Note : Windows needs to be told if it's a directory or not
+            # Note : We need to convert `/` to `\`
+			# Note : The parameters to Windows mklink command are backwards
+            if [ -d "${link_target}" ]; then
+                cmd <<< "mklink /D \"${link_source}\" \"${link_target//\//\\}\"" > /dev/null
+            else
+                cmd <<< "mklink \"${link_source}\" \"${link_target//\//\\}\"" > /dev/null
+			fi
+        else
+            ln -s "${link_target}" "${link_source}"
+        fi
+    fi
+}
+
+# Remove a link, cross-platform.
+function rmlink() {
+	local link_source=$1
+
+    if windows; then
+        # Again, Windows needs to be told if it's a file or directory.
+        if [ -d "${link_source}" ]; then
+            rmdir "${link_source}";
+        else
+            rm "${link_source}"
+        fi
+    else
+        rm "${link_source}"
+    fi
+}
+
 if [ "$#" -ne 0 ]; then
     if [ $# -eq 1 ] && [ $1 = "--test" ]; then
         echo "TESTING SCRIPT LOGIC"
@@ -39,15 +90,19 @@ fi
 
 SCRIPTDIR=`dirname "$0"`
 SCRIPTDIR=`exec 2>/dev/null;(cd -- "$SCRIPTDIR") && cd -- "$SCRIPTDIR"|| cd "$SCRIPTDIR"; unset PWD; /usr/bin/pwd || /bin/pwd || pwd`
+if windows; then
+	SCRIPTDIR=C:${SCRIPTDIR:2}
+fi
+#echo ${SCRIPTDIR}
 
-KERNEL_NAME=$(uname -s | tr "[:upper:]" "[:lower:]")
+#KERNEL_NAME=$(uname -s | tr "[:upper:]" "[:lower:]")
 
 #
 # Configure manifest information
 #
 
 # Non shell specific
-DOTS="digrc nslookuprc nofinger gitignore vimrc gitconfig_common gitconfig_mac gitconfig_linux astylerc inputrc"
+DOTS="digrc nslookuprc nofinger gitignore vimrc gitconfig_common gitconfig_mac gitconfig_linux gitconfig_windows astylerc inputrc"
 # BASH shell
 DOTS="${DOTS} bash_profile bashrc bash_logout bash_alias"
 # SH shell (including ash, dash, ...)
@@ -56,84 +111,87 @@ DOTS="${DOTS} profile"
 #DOTS="${DOTS} .cshrc .login .logout .alias"
 
 SCRIPTS="list_open_ports.sh"
-if [ ${KERNEL_NAME} = "darwin" ]; then
-    SCRIPTS="${SCRIPTS} ${PLATFORM}/access.sh ${OS}/kick.sh ${OS}/free.py"
-fi
-if [ ${KERNEL_NAME} = "linux" ]; then
-    SCRIPTS="${SCRIPTS}"
-fi
+#if [ ${KERNEL_NAME} = "darwin" ]; then
+#    SCRIPTS="${SCRIPTS} ${PLATFORM}/access.sh ${OS}/kick.sh ${OS}/free.py"
+#fi
+#if [ ${KERNEL_NAME} = "linux" ]; then
+#    SCRIPTS="${SCRIPTS}"
+#fi
 
-oldpath=`pwd`
-cd ~
+pushd ~ > /dev/null
 # Link the dot files
 for f in ${DOTS}; do
     if [ -L .${f} ]; then
-        echo "Removing old link : .${f}"
+        echo "Removing old link : ~/.${f}"
         if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-            rm .${f}
+            rmlink .${f}
         fi
     else
         if [ -e .${f} ]; then
-            echo "Skipping .${f} : file exists and is not a symbolic link"
+            echo "Skipping ~/.${f} : file exists and is not a symbolic link"
             continue
         fi
     fi
 
-    echo "Creating new link : .${f} -> ${SCRIPTDIR}/dots/${f}"
+    echo "Creating new link : ~/.${f} -> ${SCRIPTDIR}/dots/${f}"
     if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-        ln -s ${SCRIPTDIR}/dots/${f} ~/.${f}
+		link ${SCRIPTDIR}/dots/${f} .${f}
     fi
 done
 
 # Create the directories
 if ! [ -d bin ]; then
     if ! [ -e bin ]; then
-        echo "Creating bin"
+        echo "Creating ~/bin"
         if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
             mkdir bin
             chmod 755 bin
         fi
     else
-        echo "bin exists, but isn't a directory"
+        echo "~/bin exists, but isn't a directory"
         exit
     fi
 fi
-if ! [ -d bin/${KERNEL_NAME} ]; then
-    if ! [ -e bin/${KERNEL_NAME} ]; then
-        echo "Creating bin/${KERNEL_NAME}"
-        if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-            mkdir -p bin/${KERNEL_NAME}
-            chmod 755 bin/${KERNEL_NAME}
-        fi
-    else
-        echo "bin/${KERNEL_NAME} exists, but isn't a directory"
-        exit
-    fi
-fi
+#if ! [ -d bin/${KERNEL_NAME} ]; then
+#    if ! [ -e bin/${KERNEL_NAME} ]; then
+#        echo "Creating ~/bin/${KERNEL_NAME}"
+#        if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
+#            mkdir -p bin/${KERNEL_NAME}
+#            chmod 755 bin/${KERNEL_NAME}
+#        fi
+#    else
+#        echo "~/bin/${KERNEL_NAME} exists, but isn't a directory"
+#        exit
+#    fi
+#fi
 
 # Link the scripts
 for f in ${SCRIPTS}; do
     if [ -L bin/${f} ]; then
-        echo "Removing old link : bin/${f}"
+        echo "Removing old link : ~/bin/${f}"
         if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
             rm bin/${f}
         fi
     else
         if [ -e bin/${f} ]; then
-            echo "Skipping bin/${f} : file exists and is not a symbolic link"
+            echo "Skipping ~/bin/${f} : file exists and is not a symbolic link"
             continue
         fi
     fi
 
-    echo "Creating new link : bin/${f} -> ${SCRIPTDIR}/scripts/${f}"
+    echo "Creating new link : ~/bin/${f} -> ${SCRIPTDIR}/scripts/${f}"
     if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-        ln -s ${SCRIPTDIR}/scripts/${f} ~/bin/${f}
+		link ${SCRIPTDIR}/scripts/${f} bin/${f}
     fi
 done
-cd ${oldpath}
+popd > /dev/null
 
+echo
+echo "Installing 3rd party bits, ..."
+echo "~/.gdbinit -"
 curl https://raw.githubusercontent.com/gdbinit/Gdbinit/master/gdbinit > ~/.gdbinit
 chmod 644 ~/.gdbinit
+echo "~/bin/git-prompt.sh -"
 curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > ~/bin/git-prompt.sh
 chmod 755 ~/bin/git-prompt.sh
 
