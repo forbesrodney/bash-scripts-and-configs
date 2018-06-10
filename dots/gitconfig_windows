@@ -1,0 +1,43 @@
+#
+# The Creative Commons Attribution 4.0 International License (CC-BY)
+#
+# Copyright (c) 2015 Snakepit Software
+# Author: Rodney C Forbes    <5n4k3@snakepitsoftware.com>
+#
+# This work is licensed under the Creative Commons Attribution
+# 4.0 International License. To view a copy of this license,
+# visit http://creativecommons.org/licenses/by/4.0/.
+#
+
+#
+# This file needs to be included from the global .gitconfig - to use it,
+# add a section at the bottom of your .gitconfig like ...
+#
+# [include]
+#     path = /home/user/.gitconfig_windows
+#
+
+[diff]
+	tool = ultracompare
+
+[merge]
+	tool = ultracompare
+
+[mergetool  "deltawalker"]
+	cmd = 'C:/Program Files/Deltopia/DeltaWalker 2.0/git-merge' "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+
+[difftool  "deltawalker"]
+	cmd = 'C:/Program Files/Deltopia/DeltaWalker 2.0/git-diff' "$LOCAL" "$REMOTE"
+
+[mergetool  "ultracompare"]
+	cmd = 'C:/Program Files/IDM Computer Solutions/UltraCompare/uc.exe' -3 "$LOCAL" "$REMOTE" "$BASE" -o "$MERGED"
+
+[difftool "ultracompare"]
+	cmd = 'C:/Program Files/IDM Computer Solutions/UltraCompare/uc.exe' -t "$LOCAL" "$REMOTE"
+
+[difftool "vsdiffmerge"]
+	cmd = 'C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/Common7/IDE/CommonExtensions/Microsoft/TeamFoundation/Team Explorer/vsDiffMerge.exe' "$LOCAL" "$REMOTE" //t
+
+[mergetool "vsdiffmerge"]
+	cmd = 'C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/Common7/IDE/CommonExtensions/Microsoft/TeamFoundation/Team Explorer/vsDiffMerge.exe' "$REMOTE" "$LOCAL" "$BASE" "$MERGED" //m
+
