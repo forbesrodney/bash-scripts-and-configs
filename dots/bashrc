@@ -234,6 +234,7 @@ export HISTSIZE=100
 export HISTFILESIZE=500
 #export HISTFILESIZE=1000000000
 export HISTTIMEFORMAT='%a %T '
+export QUOTING_STYLE=escape
 
 export TERM='xterm'
 export VISUAL='vim'
@@ -264,7 +265,7 @@ export SUDO_EDITOR="$VISUAL"
 
 function pushd() {
     if [[ $# -gt 0 ]]; then
-        command pushd $*
+        command pushd $@
     else
         command pushd ~
     fi
