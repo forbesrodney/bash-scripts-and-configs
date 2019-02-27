@@ -69,3 +69,5 @@ if ! [ ${KERNEL_NAME} = "linux" ] && ! [ ${KERNEL_NAME} = "darwin" ]; then
     alias zmore='zcat \!* | more'
     alias zgrep='zcat \!:2 | grep -i \!:1'
 fi
+
+alias astyle='astyle -A2 -C -S -K -N -H -p -k3 -W3 -n -z2 -Y -w -S -o -O -c --min-conditional-indent=0 --indent=spaces=4'
