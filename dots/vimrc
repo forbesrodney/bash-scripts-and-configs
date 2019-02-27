@@ -12,10 +12,17 @@ set nocompatible
 " Visible Bell
 set vb
 
+" set UTF-8 encoding
+set enc=utf-8
+set fenc=utf-8
+set termencoding=utf-8
+
 set display=uhex,lastline
 set shiftwidth=4 tabstop=4 expandtab
 "set list  listchars=tab:»·,trail:·
 set list  listchars=tab:>-,trail:-
+set number
+
 au FileType make setlocal noexpandtab
 au FileType c set shiftwidth=4 tabstop=4 expandtab nowrap
 au FileType cpp set shiftwidth=4 tabstop=4 expandtab nowrap
@@ -93,6 +100,28 @@ if has("autocmd")
 
 endif " has("autocmd")
 
+if !exists("g:os")
+    if has("win64") || has("win32") || has("win16")
+        let g:os = "Windows"
+    else
+        let g:os = substitute(system('uname'), '\n', '', '')
+    endif
+endif
+
+if has('clipboard')
+    if g:os == "Darwin"
+        set clipboard=unnamed
+    elseif g:os == "Linux"
+        if has('unnamedplus')
+            set clipboard=unnamedplus
+        else
+            set clipboard=unnamed
+        endif
+    elseif g:os == "Windows"
+        set clipboard=unnamed
+    endif
+endif
+
 " statusline stuff
 function! GitBranch()
     return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
@@ -133,28 +162,28 @@ Plug 'xolox/vim-misc'
 Plug 'xolox/vim-easytags'
 Plug 'brookhong/cscope.vim'
 "Plug 'scrooloose/nerdcommenter'
-Plug 'SirVer/ultisnips'
-Plug 'jeetsukumaran/vim-buffergator'
+"Plug 'SirVer/ultisnips'
+"Plug 'jeetsukumaran/vim-buffergator'
 Plug 'gilsondev/searchtasks.vim'
 Plug 'majutsushi/tagbar'
-Plug 'simeji/winresizer'
+"Plug 'simeji/winresizer'
 "Plug 'vim-airline/vim-airline'
 "Plug 'vim-airline/vim-airline-themes'
 "Plug 'powerline/powerline'
-Plug 'tpope/vim-fugitive'
-Plug 'hashivim/vim-vagrant'
+"Plug 'tpope/vim-fugitive'
+"Plug 'hashivim/vim-vagrant'
 "Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 "Plug 'junegunn/fzf.vim'
-Plug 'zivyangll/git-blame.vim'
-Plug 'davidhalter/jedi-vim'
-Plug 'kergoth/vim-bitbake'
-Plug 'gcmt/taboo.vim'
+"Plug 'zivyangll/git-blame.vim'
+"Plug 'davidhalter/jedi-vim'
+"Plug 'kergoth/vim-bitbake'
+"Plug 'gcmt/taboo.vim'
 Plug 'airblade/vim-gitgutter'
-Plug 'jiangmiao/auto-pairs'
-Plug 'zxqfl/tabnine-vim'
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'pdavydov108/vim-lsp-cquery'
+"Plug 'jiangmiao/auto-pairs'
+"Plug 'zxqfl/tabnine-vim'
+"Plug 'prabirshrestha/async.vim'
+"Plug 'prabirshrestha/vim-lsp'
+"Plug 'pdavydov108/vim-lsp-cquery'
 Plug 'christoomey/vim-tmux-navigator'
 
 " Themes to be installed
@@ -228,9 +257,10 @@ if executable('cquery')
 endif
 
 " Change the ugly default colorscheme to something more pleasing to the eye
-" colo adam
+"colo adam
 "colo gothic
 "colo seashell
 "colo BlackSea
-colo cobalt
+"colo cobalt
+colo dante
 
