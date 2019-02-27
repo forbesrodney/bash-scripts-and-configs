@@ -21,12 +21,6 @@ au FileType c set shiftwidth=4 tabstop=4 expandtab nowrap
 au FileType cpp set shiftwidth=4 tabstop=4 expandtab nowrap
 au FileType java set shiftwidth=4 tabstop=4 expandtab nowrap
 
-" Change the ugly default colorscheme to something more pleasing to the eye
-" colo adam
-"colo gothic
-"colo seashell
-"colo BlackSea
-
 " Don't create backups
 set nobackup
 
@@ -95,4 +89,56 @@ if has("autocmd")
     \ endif
 
 endif " has("autocmd")
-"source ~/.vim/plugins/hexman.vim
+
+"        -- VimPlug --
+" Install vim-plug if it is not installed
+if empty(glob('~/.vim/autoload/plug.vim'))
+          silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+              \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+            autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+" Plugins to be installed 
+call plug#begin('~/.vim/plugged')
+
+Plug 'scrooloose/nerdtree'
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-easytags'
+Plug 'brookhong/cscope.vim'
+Plug 'scrooloose/nerdcommenter'
+Plug 'SirVer/ultisnips'
+Plug 'jeetsukumaran/vim-buffergator'
+Plug 'gilsondev/searchtasks.vim'
+Plug 'majutsushi/tagbar'
+Plug 'simeji/winresizer'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'powerline/powerline'
+Plug 'tpope/vim-fugitive'
+Plug 'hashivim/vim-vagrant'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'zivyangll/git-blame.vim'
+Plug 'davidhalter/jedi-vim'
+Plug 'kergoth/vim-bitbake'
+Plug 'gcmt/taboo.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'jiangmiao/auto-pairs'
+Plug 'zxqfl/tabnine-vim'
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'pdavydov108/vim-lsp-cquery'
+Plug 'christoomey/vim-tmux-navigator'
+
+" Themes to be installed
+Plug 'vim-scripts/dante.vim'
+Plug 'gkjgh/cobalt'
+
+call plug#end()
+
+" Change the ugly default colorscheme to something more pleasing to the eye
+" colo adam
+"colo gothic
+"colo seashell
+"colo BlackSea
+colo cobalt

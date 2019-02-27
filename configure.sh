@@ -102,7 +102,7 @@ fi
 #
 
 # Non shell specific
-DOTS="digrc nslookuprc nofinger gitignore vimrc gitconfig_common gitconfig_mac gitconfig_linux gitconfig_windows astylerc inputrc"
+DOTS="digrc nslookuprc nofinger gitignore vimrc gitconfig_common gitconfig_mac gitconfig_linux gitconfig_windows astylerc inputrc tmux.conf"
 # BASH shell
 DOTS="${DOTS} bash_profile bashrc bash_logout bash_alias"
 # SH shell (including ash, dash, ...)
@@ -194,6 +194,19 @@ chmod 644 ~/.gdbinit
 echo "~/bin/git-prompt.sh -"
 curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > ~/bin/git-prompt.sh
 chmod 755 ~/bin/git-prompt.sh
+echo "~/bin/diff-so-fancy.sh -"
+curl https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party/build_fatpack/diff-so-fancy > ~/bin/diff-so-fancy
+chmod 755 ~/bin/diff-so-fancy
+
+[ ! -d ~/.tmux/plugins/tpm ] &&
+    echo "~/.tmux/plugins/tpm -" &&
+    mkdir -p ~/.tmux/plugins &&
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+[ ! -e ~/.vim/autoload/plug.vim ] &&
+    echo "~/.vim/autoload/plug.vim -" &&
+    mkdir -p ~/.vim/autoload/ &&
+    curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim &&
+    vim +PlugInstall +qall
 
 echo
 echo "**************************************************************"
