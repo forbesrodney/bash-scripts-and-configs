@@ -1,7 +1,8 @@
 #!/bin/bash
 
 OS="$(cat /etc/os-release | grep ID_LIKE | cut -d "=" -f2)"
-COMMON_PKGS="curl exuberant-ctags cscope powerline fonts-powerline python3-docopt python3-jinja2 tmux"
+COMMON_PKGS="curl exuberant-ctags cscope tmux"
+#powerline fonts-powerline python3-docopt python3-jinja2 tmux"
 DEBIAN_PKGS=""
 FEDORA_PKGS=""
 
@@ -25,8 +26,8 @@ install_deps() {
 
     # Install OS Specific Packages
     for pkg in $pkg_list; do 
-		$pkg_install $pkg 
-	done
+        $pkg_install $pkg 
+    done
 }
 
 prompt_user() {
