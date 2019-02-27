@@ -13,7 +13,7 @@ set nocompatible
 set vb
 
 set display=uhex,lastline
-"set shiftwidth=4 tabstop=4 expandtab
+set shiftwidth=4 tabstop=4 expandtab
 "set list  listchars=tab:»·,trail:·
 set list  listchars=tab:>-,trail:-
 au FileType make setlocal noexpandtab
@@ -21,8 +21,9 @@ au FileType c set shiftwidth=4 tabstop=4 expandtab nowrap
 au FileType cpp set shiftwidth=4 tabstop=4 expandtab nowrap
 au FileType java set shiftwidth=4 tabstop=4 expandtab nowrap
 
-" Don't create backups
+" Don't create backups or swap files
 set nobackup
+set noswapfile
 
 " Allow mouse
 "set mouse=a
@@ -36,6 +37,8 @@ set history=50          " keep 50 lines of command line history
 set ruler               " show the cursor position all the time
 set showcmd             " display incomplete commands
 set incsearch           " do incremental searching
+set ignorecase          " case insensitive search
+set smartcase           " smartcase will do a case sensitive search if using caps
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, "t", "", "g")
@@ -43,7 +46,7 @@ set incsearch           " do incremental searching
 " Don't use Ex mode, use Q for formatting
 map Q gq
 
-" Trim blanks
+" Trim blanks on exit
 "      :%s/\s\+$//
 :command Tb %s/\s\+$//
 
@@ -98,7 +101,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
             autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-" Plugins to be installed 
+" Plugins to be installed
 call plug#begin('~/.vim/plugged')
 
 Plug 'scrooloose/nerdtree'
@@ -111,13 +114,13 @@ Plug 'jeetsukumaran/vim-buffergator'
 Plug 'gilsondev/searchtasks.vim'
 Plug 'majutsushi/tagbar'
 Plug 'simeji/winresizer'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'powerline/powerline'
+"Plug 'vim-airline/vim-airline'
+"Plug 'vim-airline/vim-airline-themes'
+"Plug 'powerline/powerline'
 Plug 'tpope/vim-fugitive'
 Plug 'hashivim/vim-vagrant'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+"Plug 'junegunn/fzf.vim'
 Plug 'zivyangll/git-blame.vim'
 Plug 'davidhalter/jedi-vim'
 Plug 'kergoth/vim-bitbake'
@@ -136,9 +139,74 @@ Plug 'gkjgh/cobalt'
 
 call plug#end()
 
+"
+"########### Plugins Specific Stuffs #############
+"
+"     -- NerdTree --
+"Toggle NERDtree to Ctrl+N
+nmap <C-N> :NERDTreeToggle<CR>
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+"     -- Cscope --
+nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
+nnoremap <leader>l :call ToggleLocationList()<CR>
+
+"      -- SearchTasks --
+" Keywords for searchtask to look for
+let g:searchtasks_list=["TODO", "FIXME", "XXX", "RCF"]
+
+"       -- TagBar --
+" Map the tagbar to F8
+nmap <F8> :TagbarToggle<CR>
+
+"       -- Vim Airline --
+"let g:airline_powerline_fonts = 1
+
+"        -- FZF --
+" Use ctrl+f to open the file list
+"nnoremap <C-f> :Files<Cr>
+
+"Use ctrl+b to open list of buffers
+"nnoremap <C-b> :Buffers<Cr>
+
+"Use leader+h to open buffer history
+"nmap <Leader>h :History<CR>
+
+" Search through current buffer lines with leader+l and global bufferlines with
+" leader+L
+"nmap <Leader>l :BLines<CR>
+"nmap <Leader>L :Lines<CR>
+
+" Search through tags in current buffer, and search through tags in across the
+" project
+"nmap <Leader>t :BTags<CR>
+"nmap <Leader>T :Tags<CR>
+
+" Search Through Marks with leader+'
+"nmap <Leader>' :Marks<CR>
+
+" Easily grep within project using ctrl+g
+"command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+"nnoremap <C-g> :Rg<CR>
+
+"           -- Cquery --
+if executable('cquery')
+    au User lsp_setup call lsp#register_server({
+          \ 'name': 'cquery',
+          \ 'cmd': {server_info->['cquery']},
+          \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+          \ 'initialization_options': { 'cacheDirectory': '/tmp/cquery/cache'  },
+          \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+          \ })
+endif
+
 " Change the ugly default colorscheme to something more pleasing to the eye
 " colo adam
 "colo gothic
 "colo seashell
 "colo BlackSea
 colo cobalt
+

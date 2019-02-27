@@ -340,3 +340,4 @@ function xtitle () {
 
 # Reenable the history
 set -o history
+
