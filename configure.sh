@@ -110,7 +110,7 @@ DOTS="${DOTS} profile"
 # CSH (including tcsh)
 #DOTS="${DOTS} .cshrc .login .logout .alias"
 
-SCRIPTS="list_open_ports.sh"
+SCRIPTS="list_open_ports.sh yank.sh"
 #if [ ${KERNEL_NAME} = "darwin" ]; then
 #    SCRIPTS="${SCRIPTS} ${PLATFORM}/access.sh ${OS}/kick.sh ${OS}/free.py"
 #fi

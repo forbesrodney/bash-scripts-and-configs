@@ -46,6 +46,10 @@ set showcmd             " display incomplete commands
 set incsearch           " do incremental searching
 set ignorecase          " case insensitive search
 set smartcase           " smartcase will do a case sensitive search if using caps
+"if exists('&colorcolumn')
+"    let &colorcolumn="80,".join(range(120,999),",")
+"    highlight colorcolumn ctermbg=7
+"endif
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, "t", "", "g")
