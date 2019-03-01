@@ -72,3 +72,8 @@ fi
 
 alias astyle='astyle -A2 -C -S -K -N -H -p -k3 -W3 -n -z2 -Y -w -S -o -O -c --min-conditional-indent=0 --indent=spaces=4'
 
+alias tmux_install='~/.tmux/plugins/tpm/scripts/install_plugins.sh'
+alias tmux_update='~/.tmux/plugins/tpm/scripts/update_plugin.sh all'
+alias tmux_clean='~/.tmux/plugins/tpm/scripts/clean_plugins.sh'
+alias vim_install='vim +PlugInstall +qall'
+alias vim_update='vim +PlugUpdate +qall'

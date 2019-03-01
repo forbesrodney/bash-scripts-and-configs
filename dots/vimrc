@@ -104,6 +104,38 @@ if has("autocmd")
 
 endif " has("autocmd")
 
+" Toggle Vexplore with Ctrl-E
+"function! ToggleVExplorer()
+"  if exists("t:expl_buf_num")
+"      let expl_win_num = bufwinnr(t:expl_buf_num)
+"      if expl_win_num != -1
+"          let cur_win_nr = winnr()
+"          exec expl_win_num . 'wincmd w'
+"          close
+"          exec cur_win_nr . 'wincmd w'
+"          unlet t:expl_buf_num
+"      else
+"          unlet t:expl_buf_num
+"      endif
+"  else
+"      exec '1wincmd w'
+"      Vexplore
+"      let t:expl_buf_num = bufnr("%")
+"  endif
+"endfunction
+"map <silent> <C-E> :call ToggleVExplorer()<CR>
+nmap <C-E> :Lexplore<CR>
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
+"augroup ProjectDrawer
+"  autocmd!
+"  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | Lexplore | endif
+"augroup END
+"autocmd FileType netrw nnoremap q :bd<CR>
+
 if !exists("g:os")
     if has("win64") || has("win32") || has("win16")
         let g:os = "Windows"
@@ -161,7 +193,7 @@ endif
 " Plugins to be installed
 call plug#begin('~/.vim/plugged')
 
-Plug 'scrooloose/nerdtree'
+"Plug 'scrooloose/nerdtree'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-easytags'
 Plug 'brookhong/cscope.vim'
@@ -201,11 +233,11 @@ call plug#end()
 "
 "     -- NerdTree --
 "Toggle NERDtree to Ctrl+N
-nmap <C-N> :NERDTreeToggle<CR>
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+"nmap <C-N> :NERDTreeToggle<CR>
+"let NERDTreeMinimalUI = 1
+"let NERDTreeDirArrows = 1
+"autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 "     -- Cscope --
 nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
@@ -265,6 +297,6 @@ endif
 "colo gothic
 "colo seashell
 "colo BlackSea
-"colo cobalt
-colo dante
+colo cobalt
+"colo dante
 

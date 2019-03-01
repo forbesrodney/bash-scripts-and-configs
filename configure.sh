@@ -201,7 +201,8 @@ chmod 755 ~/bin/diff-so-fancy
 [ ! -d ~/.tmux/plugins/tpm ] &&
     echo "~/.tmux/plugins/tpm -" &&
     mkdir -p ~/.tmux/plugins &&
-    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm &&
+    ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 [ ! -e ~/.vim/autoload/plug.vim ] &&
     echo "~/.vim/autoload/plug.vim -" &&
     mkdir -p ~/.vim/autoload/ &&
