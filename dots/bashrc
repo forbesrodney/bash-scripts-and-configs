@@ -24,8 +24,8 @@ set +o history
 # past this point for scp and rcp, and it's important to refrain from
 # outputting anything in those cases.
 if [[ $- != *i* ]] ; then
-    # Shell is truly non-interactive.  Be done now!
-    return
+  # Shell is truly non-interactive.  Be done now!
+  return
 fi
 
 ###########################################
@@ -36,7 +36,7 @@ fi
 ### Start with some reasonable defaults ###
 ###########################################
 if [ -n ${BASH:-""} ]; then
-    [ -r /etc/bashrc ] && . /etc/bashrc
+  [ -r /etc/bashrc ] && . /etc/bashrc
 fi
 
 # Ultimately what would be most useful would be something like ...
@@ -87,34 +87,34 @@ fi
 export KERNEL_NAME=$(uname -s | tr "[:upper:]" "[:lower:]")
 KERNEL_ARCH=$(getconf LONG_BIT)
 if [ ${KERNEL_ARCH} = 64 ]; then
-    export KERNEL_ARCH="x64"
+  export KERNEL_ARCH="x64"
 else
-    export KERNEL_ARCH="x86"
+  export KERNEL_ARCH="x86"
 fi
 
 # These however are not, but I'm really not using any of these yet
 if [ ${KERNEL_NAME} = "darwin" ]; then
-    export KERNEL_VERS=$(uname -r)
-    export DISTRO="Mac OS/X"
-    export RELEASE=$(sw_vers -productVersion)
+  export KERNEL_VERS=$(uname -r)
+  export DISTRO="Mac OS/X"
+  export RELEASE=$(sw_vers -productVersion)
 elif [ ${KERNEL_NAME} = "linux" ]; then
-    export KERNEL_VERS=$(uname -r)
-    if [ -f /etc/lsb-release ]; then
-        . /etc/lsb-release
-        export DISTRO=$DISTRIB_ID
-        export RELEASE=$DISTRIB_RELEASE
-    elif [ -f /etc/debian_version ]; then
-        export DISTRO=Debian  # XXX or Ubuntu??
-        export RELEASE=$(cat /etc/debian_version)
-    elif [ -f /etc/redhat-release ]; then
-        OS_MAJOR_VERSION=`sed -rn 's/.*([0-9])\.[0-9].*/\1/p' /etc/redhat-release`
-        OS_MINOR_VERSION=`sed -rn 's/.*[0-9].([0-9]).*/\1/p' /etc/redhat-release`
-        export DISTRO="RedHat"
-        export RELEASE="${OS_MAJOR_VERSION}.${OS_MINOR_VERSION}"
-    else
-        export DISTRO=$(uname -s)
-        export RELEASE=$(uname -r)
-    fi
+  export KERNEL_VERS=$(uname -r)
+  if [ -f /etc/lsb-release ]; then
+    . /etc/lsb-release
+    export DISTRO=$DISTRIB_ID
+    export RELEASE=$DISTRIB_RELEASE
+  elif [ -f /etc/debian_version ]; then
+    export DISTRO=Debian  # XXX or Ubuntu??
+    export RELEASE=$(cat /etc/debian_version)
+  elif [ -f /etc/redhat-release ]; then
+    OS_MAJOR_VERSION=`sed -rn 's/.*([0-9])\.[0-9].*/\1/p' /etc/redhat-release`
+    OS_MINOR_VERSION=`sed -rn 's/.*[0-9].([0-9]).*/\1/p' /etc/redhat-release`
+    export DISTRO="RedHat"
+    export RELEASE="${OS_MAJOR_VERSION}.${OS_MINOR_VERSION}"
+  else
+    export DISTRO=$(uname -s)
+    export RELEASE=$(uname -r)
+  fi
 fi
 
 #####################
@@ -196,21 +196,21 @@ shopt -u xpg_echo
 #   /dir1/dir2/dir3/dir4/dir5  = /dir1/.../dir4/dir5
 #   ~/dir1/dir2/dir3/dir4/dir5 = ~/dir1/.../dir4/dir5
 function getshortenedpath() {
-    pwd | awk -v home=$HOME -v num_elem=5 '// {
-            sub(home,"~",$0);
-            n = split($0, x, "/");
-            s = ((n <= num_elem)? $0: x[1] "/" x[2] "/.../" x[n-1] "/" x[n]);
-            print s;
-            exit (0);
-            }'
+  pwd | awk -v home=$HOME -v num_elem=5 '// {
+          sub(home,"~",$0);
+          n = split($0, x, "/");
+          s = ((n <= num_elem)? $0: x[1] "/" x[2] "/.../" x[n-1] "/" x[n]);
+          print s;
+          exit (0);
+          }'
 }
 
 function getgitinformation() {
-    if [[ $(git rev-parse --git-dir 2> /dev/null) ]]; then
-        GITPROMPT="[$(git rev-parse --abbrev-ref HEAD)]"
-        # git status --untracked-files=all --ignore-submodules=all --porcelain --branch
-    fi
-    echo ${GITPROMPT:=""}
+  if [[ $(git rev-parse --git-dir 2> /dev/null) ]]; then
+    GITPROMPT="[$(git rev-parse --abbrev-ref HEAD)]"
+    # git status --untracked-files=all --ignore-submodules=all --porcelain --branch
+  fi
+  echo ${GITPROMPT:=""}
 }
 
 . ~/bin/git-prompt.sh
@@ -220,9 +220,9 @@ GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWUPSTREAM="verbose name"
 GIT_PS1_DESCRIBESTYLE=branch
 if [ ${SHLVL} -eq 1 ]; then
-    export PS1="[\\u@\\h]\$(__git_ps1 "[%s]")[\$(getshortenedpath)]\\$"
+  export PS1="[\\u@\\h]\$(__git_ps1 "[%s]")[\$(getshortenedpath)]\\$"
 else
-    export PS1="[\\u@\\h]\$(__git_ps1 "[%s]")[\$(getshortenedpath)][${SHLVL}]\\$"
+  export PS1="[\\u@\\h]\$(__git_ps1 "[%s]")[\$(getshortenedpath)][${SHLVL}]\\$"
 fi
 
 #############################
@@ -271,67 +271,67 @@ export SUDO_EDITOR="$VISUAL"
 #
 
 function pushd() {
-    if [[ $# -gt 0 ]]; then
-        command pushd $@
-    else
-        command pushd ~
-    fi
+  if [[ $# -gt 0 ]]; then
+    command pushd $@
+  else
+    command pushd ~
+  fi
 }
 
 function pdir() { dir $* | more; }
 
 # If you ever get lost, this will give you most of what you would need.
 function status() {
-    local dev=`tty`
-    echo "`date`"
-    echo "You are:"
-    echo "   `whoami`@`hostname`,${dev:t} ($TERM) [${SHELL:t}]"
-    echo ""
-    echo "Directories:"
-    echo "   Current - `pwd`"
-    echo "   Stack   - `dirs`"
-    echo "   Home    - $HOME"
-    echo ""
-    echo "and so life goes on..."
-    echo "Copyright (c) 1992-2007 Rodney C Forbes"
+  local dev=`tty`
+  echo "`date`"
+  echo "You are:"
+  echo "   `whoami`@`hostname`,${dev:t} ($TERM) [${SHELL:t}]"
+  echo ""
+  echo "Directories:"
+  echo "   Current - `pwd`"
+  echo "   Stack   - `dirs`"
+  echo "   Home    - $HOME"
+  echo ""
+  echo "and so life goes on..."
+  echo "Copyright (c) 1992-2007 Rodney C Forbes"
 }
 
 # Here is a series of functions that will set the titles for xterms and others
 
 # set the title bar of the terminal
 function title () {
-    case "$TERM" in
-        *term | rxvt)
-            echo -n -e "\033]2;$*\007"
-            ;;
-        *)
-            echo "Unable to perform this function."
-            ;;
-    esac
+  case "$TERM" in
+    *term | rxvt)
+      echo -n -e "\033]2;$*\007"
+      ;;
+    *)
+      echo "Unable to perform this function."
+      ;;
+  esac
 }
 
 # set the terminal's icon title
 function ititle () {
-    case "$TERM" in
-        *term | rxvt)
-            echo -n -e "\033]1;$*\007"
-            ;;
-        *)
-            echo "Unable to perform this function."
-            ;;
-    esac
+  case "$TERM" in
+    *term | rxvt)
+      echo -n -e "\033]1;$*\007"
+      ;;
+    *)
+      echo "Unable to perform this function."
+      ;;
+  esac
 }
 
 # set both the title bar of the terminal and the terminal's icon title
 function xtitle () {
-    case "$TERM" in
-        *term | rxvt)
-            echo -n -e "\033]0;$*\007"
-            ;;
-        *)
-            echo "Unable to perform this function."
-            ;;
-    esac
+  case "$TERM" in
+    *term | rxvt)
+      echo -n -e "\033]0;$*\007"
+      ;;
+    *)
+      echo "Unable to perform this function."
+      ;;
+  esac
 }
 
 #

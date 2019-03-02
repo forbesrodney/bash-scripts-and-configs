@@ -26,18 +26,18 @@ alias realias='unalias -a;. ~/.bash_alias'
 
 # always enable color and flags
 if [ ${KERNEL_NAME} = "linux" ]; then
-    alias ls='ls --color=auto -F'
+  alias ls='ls --color=auto -F'
 elif [ ${KERNEL_NAME} = "darwin" ]; then
-    alias ls='ls -GF'
+  alias ls='ls -GF'
 else
-    alias ls='ls -F'
+  alias ls='ls -F'
 fi
 
 # extra information when available
 if [ ${KERNEL_NAME} = "darwin" ]; then
-    alias dir='ls -lhO@e'
+  alias dir='ls -lhO@e'
 else
-    alias dir='ls -lh'
+  alias dir='ls -lh'
 fi
 
 alias vi='vim'
@@ -63,11 +63,11 @@ alias work='title "Working Window \(`hostname | cut -d. -f1`\)"'
 
 alias ah='cut -f1 -d" " ~/.bash_history | sort | uniq -c | sort -nr | head -n 30'
 #if [ ${KERNEL_NAME} = "linux" ]; then
-#    alias make='pmake'
+#  alias make='pmake'
 #fi
 if ! [ ${KERNEL_NAME} = "linux" ] && ! [ ${KERNEL_NAME} = "darwin" ]; then
-    alias zmore='zcat \!* | more'
-    alias zgrep='zcat \!:2 | grep -i \!:1'
+  alias zmore='zcat \!* | more'
+  alias zgrep='zcat \!:2 | grep -i \!:1'
 fi
 
 alias astyle='astyle -A2 -C -S -K -N -H -p -k3 -W3 -n -z2 -Y -w -S -o -O -c --min-conditional-indent=0 --indent=spaces=4'
@@ -77,3 +77,6 @@ alias tmux_update='~/.tmux/plugins/tpm/scripts/update_plugin.sh all'
 alias tmux_clean='~/.tmux/plugins/tpm/scripts/clean_plugins.sh'
 alias vim_install='vim +PlugInstall +qall'
 alias vim_update='vim +PlugUpdate +qall'
+
+alias tmux='/usr/bin/tmux new-session -s SecureView -A \; source ~/.tmux/SecureView'
+

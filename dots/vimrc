@@ -5,11 +5,15 @@ if v:progname =~? "evim"
     finish
 endif
 
+"
+" General purpose settings
+"
+
 " Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
-" Visible Bell
+" turn on visible bell
 set vb
 
 " set UTF-8 encoding
@@ -23,19 +27,21 @@ set shiftwidth=4 tabstop=4 expandtab
 set list  listchars=tab:>-,trail:-
 set number
 
-au FileType make setlocal noexpandtab
-au FileType c set shiftwidth=4 tabstop=4 expandtab nowrap
-au FileType cpp set shiftwidth=4 tabstop=4 expandtab nowrap
-au FileType java set shiftwidth=4 tabstop=4 expandtab nowrap
-
-" Don't create backups or swap files
+" don't create backups or swap files
 set nobackup
 set noswapfile
 
-" Allow mouse
+" switch syntax highlighting on, when the terminal has colors
+" also switch on highlighting the last used search pattern.
+if &t_Co > 2 || has("gui_running")
+    syntax on
+    set hlsearch
+endif
+
+" allow mouse
 "set mouse=a
 
-" Don't allow backspacing over everything in insert mode
+" don't allow backspacing over everything in insert mode
 "set backspace=
 "indent,eol,start
 
@@ -52,16 +58,27 @@ set smartcase           " smartcase will do a case sensitive search if using cap
 "endif
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
-" let &guioptions = substitute(&guioptions, "t", "", "g")
-
-" Don't use Ex mode, use Q for formatting
-map Q gq
+let &guioptions = substitute(&guioptions, "t", "", "g")
 
 " Trim blanks on exit
 "      :%s/\s\+$//
 :command Tb %s/\s\+$//
 
 :set cpoptions+=$
+
+"
+" Mappings
+"
+
+" backslash is kinda awkward to hit
+:let mapleader = ","
+
+" alternate tab switching (gt/gT)
+nnoremap <C-Right> :tabnext<CR>
+nnoremap <C-Left> :tabprevious<CR>
+
+" Don't use Ex mode, use Q for formatting
+map Q gq
 
 " Make p in Visual mode replace the selected text with the "" register.
 vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
@@ -75,15 +92,17 @@ vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
 " text is lost and it only works for putting the current register.
 "vnoremap p "_dp
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-    syntax on
-    set hlsearch
-endif
+"
+" Autocmd stuff
+"
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
+
+    au FileType make setlocal noexpandtab
+    au FileType c set shiftwidth=4 tabstop=4 expandtab nowrap
+    au FileType cpp set shiftwidth=4 tabstop=4 expandtab nowrap
+    au FileType java set shiftwidth=4 tabstop=4 expandtab nowrap
 
     " Enable file type detection.
     " Use the default filetype settings, so that mail gets 'tw' set to 72,
@@ -103,6 +122,10 @@ if has("autocmd")
     \ endif
 
 endif " has("autocmd")
+
+"
+" Netrw stuff
+"
 
 " Toggle Vexplore with Ctrl-E
 "function! ToggleVExplorer()
@@ -136,6 +159,10 @@ let g:netrw_winsize = 25
 "augroup END
 "autocmd FileType netrw nnoremap q :bd<CR>
 
+"
+" Clipboard stuff
+"
+
 if !exists("g:os")
     if has("win64") || has("win32") || has("win16")
         let g:os = "Windows"
@@ -158,7 +185,10 @@ if has('clipboard')
     endif
 endif
 
-" statusline stuff
+"
+" Status line stuff
+"
+
 function! GitBranch()
     return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
 endfunction
@@ -177,12 +207,15 @@ set statusline+=%=
 set statusline+=\ %y
 set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
 set statusline+=\[%{&fileformat}\]
-set statusline+=\ %p%%
-set statusline+=\ %l:%c
+"set statusline+=\ %p%%
+set statusline+=\ %l/%L:%c
 " The trailing space is important
 set statusline+=\ 
 
-"        -- VimPlug --
+"
+" VimPlug stuff
+"
+
 " Install vim-plug if it is not installed
 if empty(glob('~/.vim/autoload/plug.vim'))
           silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -193,15 +226,20 @@ endif
 " Plugins to be installed
 call plug#begin('~/.vim/plugged')
 
-"Plug 'scrooloose/nerdtree'
+Plug 'vimwiki/vimwiki'
+Plug 'chazy/dirsettings'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-easytags'
 Plug 'brookhong/cscope.vim'
+Plug 'gilsondev/searchtasks.vim'
+Plug 'majutsushi/tagbar'
+Plug 'airblade/vim-gitgutter'
+Plug 'christoomey/vim-tmux-navigator'
+"Plug 'zivyangll/git-blame.vim'
+"Plug 'scrooloose/nerdtree'
 "Plug 'scrooloose/nerdcommenter'
 "Plug 'SirVer/ultisnips'
 "Plug 'jeetsukumaran/vim-buffergator'
-Plug 'gilsondev/searchtasks.vim'
-Plug 'majutsushi/tagbar'
 "Plug 'simeji/winresizer'
 "Plug 'vim-airline/vim-airline'
 "Plug 'vim-airline/vim-airline-themes'
@@ -210,17 +248,14 @@ Plug 'majutsushi/tagbar'
 "Plug 'hashivim/vim-vagrant'
 "Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 "Plug 'junegunn/fzf.vim'
-"Plug 'zivyangll/git-blame.vim'
 "Plug 'davidhalter/jedi-vim'
 "Plug 'kergoth/vim-bitbake'
 "Plug 'gcmt/taboo.vim'
-Plug 'airblade/vim-gitgutter'
 "Plug 'jiangmiao/auto-pairs'
 "Plug 'zxqfl/tabnine-vim'
 "Plug 'prabirshrestha/async.vim'
 "Plug 'prabirshrestha/vim-lsp'
 "Plug 'pdavydov108/vim-lsp-cquery'
-Plug 'christoomey/vim-tmux-navigator'
 
 " Themes to be installed
 Plug 'vim-scripts/dante.vim'
@@ -229,9 +264,38 @@ Plug 'gkjgh/cobalt'
 call plug#end()
 
 "
-"########### Plugins Specific Stuffs #############
+" Plugin specific stuff
 "
-"     -- NerdTree --
+
+" -- VimWiki
+let g:vimwiki_list = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.wiki'}]
+
+au BufEnter *.wiki :syntax sync fromstart
+
+" >>, <<  - indents/outdents single line
+:nmap >> <Plug>VimwikiIncreaseLvlSingleItem
+:vmap >> <Plug>VimwikiIncreaseLvlSingleItem
+:nmap << <Plug>VimwikiDecreaseLvlSingleItem
+:vmap << <Plug>VimwikiDecreaseLvlSingleItem
+" >>>, << - indents/outdents whole item
+:nmap >>> <Plug>VimwikiIncreaseLvlWholeItem
+:vmap >>> <Plug>VimwikiIncreaseLvlWholeItem
+:nmap <<< <Plug>VimwikiDecreaseLvlWholeItem
+:vmap <<< <Plug>VimwikiDecreaseLvlWholeItem
+" tt, rr, ++, --  - toggles completed/not started, rejects/unrejects, increments/decrements completeness (. o O X) of a list item
+:nmap tt <Plug>VimwikiToggleListItem
+:vmap tt <Plug>VimwikiToggleListItem
+:nmap rr <Plug>VimwikiToggleRejectedListItem
+:vmap rr <Plug>VimwikiToggleRejectedListItem
+:nmap ++ <Plug>VimwikiIncrementListItem
+:vmap ++ <Plug>VimwikiIncrementListItem
+:nmap -- <Plug>VimwikiDecrementListItem
+:vmap -- <Plug>VimwikiDecrementListItem
+" Playing around with changing the way you follow links and go back
+":nmap <Leader>wf <Plug>VimwikiFollowLink
+":nmap <Leader>wb <Plug>VimwikiGoBackLink
+
+" -- NerdTree
 "Toggle NERDtree to Ctrl+N
 "nmap <C-N> :NERDTreeToggle<CR>
 "let NERDTreeMinimalUI = 1
@@ -239,22 +303,22 @@ call plug#end()
 "autocmd StdinReadPre * let s:std_in=1
 "autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
-"     -- Cscope --
+" -- Cscope
 nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
 nnoremap <leader>l :call ToggleLocationList()<CR>
 
-"      -- SearchTasks --
+" SearchTasks
 " Keywords for searchtask to look for
 let g:searchtasks_list=["TODO", "FIXME", "XXX", "RCF"]
 
-"       -- TagBar --
+" -- TagBar
 " Map the tagbar to F8
 nmap <F8> :TagbarToggle<CR>
 
-"       -- Vim Airline --
+" -- Vim Airline
 "let g:airline_powerline_fonts = 1
 
-"        -- FZF --
+" -- FZF
 " Use ctrl+f to open the file list
 "nnoremap <C-f> :Files<Cr>
 
@@ -281,7 +345,7 @@ nmap <F8> :TagbarToggle<CR>
 "command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
 "nnoremap <C-g> :Rg<CR>
 
-"           -- Cquery --
+" -- Cquery
 if executable('cquery')
     au User lsp_setup call lsp#register_server({
           \ 'name': 'cquery',
@@ -292,11 +356,15 @@ if executable('cquery')
           \ })
 endif
 
+"
+" Theme stuff
+"
+
 " Change the ugly default colorscheme to something more pleasing to the eye
 "colo adam
 "colo gothic
 "colo seashell
 "colo BlackSea
-colo cobalt
-"colo dante
+"colo cobalt
+colo dante
 
