@@ -149,10 +149,11 @@ endif " has("autocmd")
 "map <silent> <C-E> :call ToggleVExplorer()<CR>
 nmap <C-E> :Lexplore<CR>
 let g:netrw_banner = 0
-let g:netrw_liststyle = 3
+let g:netrw_liststyle = 2
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 25
+"au FileType netrw au BufLeave <buffer> :bd<CR>
 "augroup ProjectDrawer
 "  autocmd!
 "  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | Lexplore | endif
@@ -235,6 +236,9 @@ Plug 'gilsondev/searchtasks.vim'
 Plug 'majutsushi/tagbar'
 Plug 'airblade/vim-gitgutter'
 Plug 'christoomey/vim-tmux-navigator'
+"Plug 'tpope/vim-vinegar'
+"Plug 'tpope/vim-fugitive'
+"Plug 'euclio/gitignore'
 "Plug 'zivyangll/git-blame.vim'
 "Plug 'scrooloose/nerdtree'
 "Plug 'scrooloose/nerdcommenter'
@@ -244,7 +248,6 @@ Plug 'christoomey/vim-tmux-navigator'
 "Plug 'vim-airline/vim-airline'
 "Plug 'vim-airline/vim-airline-themes'
 "Plug 'powerline/powerline'
-"Plug 'tpope/vim-fugitive'
 "Plug 'hashivim/vim-vagrant'
 "Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 "Plug 'junegunn/fzf.vim'
@@ -258,8 +261,11 @@ Plug 'christoomey/vim-tmux-navigator'
 "Plug 'pdavydov108/vim-lsp-cquery'
 
 " Themes to be installed
+"Plug 'gkjgh/cobalt'
 Plug 'vim-scripts/dante.vim'
-Plug 'gkjgh/cobalt'
+"Plug 'vim-scripts/Gothic'
+"Plug 'vim-scripts/seashell'
+"Plug 'vim-scripts/BlackSea'
 
 call plug#end()
 
@@ -361,10 +367,9 @@ endif
 "
 
 " Change the ugly default colorscheme to something more pleasing to the eye
-"colo adam
+"colo cobalt
+colo dante
 "colo gothic
 "colo seashell
 "colo BlackSea
-"colo cobalt
-colo dante
 
