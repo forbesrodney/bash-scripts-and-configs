@@ -10,9 +10,10 @@ configs/ - other config files for controlling the behavior of applications, thes
 The files in this project support OS/X and Linux as best they can as these are the only OSs that I currently have access to. You might find that FreeBSD is fairly well supported as well as it used to be my main OS.
 
 #### Using These Files
-There is a script called create-links.sh in the root of this repo that can be used to create symbolic links to the other files as appropriate. Basically, it'll create links in ~/bin for all the scripts and links in ~/ for all the dot files.
+There are two scripts in the root of this repo (configure.sh and install-deps.sh) that can be used to create symbolic links to the other files as appropriate. Basically, it'll create links in ~/bin for all the scripts and links in ~/ for all the dot files.
 <pre>
-  git clone git@github.com:snakepitsoftware/bash-scripts-and-configs.git
+  git clone git@github.com:forbesrodney/bash-scripts-and-configs.git
   cd bash-scripts-and-configs
-  ./create-links.sh
+  ./install-deps.sh
+  ./configure.sh
 </pre>
