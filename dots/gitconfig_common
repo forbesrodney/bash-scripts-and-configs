@@ -69,23 +69,25 @@
     pul              = pull
     fa               = fetch -v --all
 
+    # Specialized diff output
+    ds               = diff --staged
+    dc               = diff --cached
+    dw               = diff --word-diff=plain
+
     # Specialized log output
     log-g            = log --graph
     ll               = log --decorate=full --pretty=medium --no-abbrev-commit --date=relative
     ll-g             = log --decorate=full --pretty=medium --no-abbrev-commit --date=relative --graph
     showtagsbydate   = log --date-order --tags --simplify-by-decoration --pretty='format:%C(green)%ad %C(red)%h %C(reset)%D' --date=format:'%Y-%m-%d %H:%M:%S'
 
-    # Specialized diff output
-    ds               = diff --staged
-    dc               = diff --cached
-    dw               = diff --word-diff=plain
-
     #qpush     = "!git push origin \"$(git rev-parse --abbrev-ref HEAD)\""
     #qpull     = "!git pull origin \"$(git rev-parse --abbrev-ref HEAD)\""
     #pr = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/pull/new/$(git rev-parse --abbrev-ref HEAD)\""
     #gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
-    #
+
+    # amend history
     amend            = commit --amend -a
+    # tag stuff
     tag              = "!f() { git-tag -a $1 -m "$1"; git push origin $1; }; f"
     untag            = "!f() { git tag -d $1; git push --delete origin $1; }; f"
     # Unstage any files that have been added to the staging area
