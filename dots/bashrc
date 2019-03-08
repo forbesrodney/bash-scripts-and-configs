@@ -99,7 +99,11 @@ if [ ${KERNEL_NAME} = "darwin" ]; then
   export RELEASE=$(sw_vers -productVersion)
 elif [ ${KERNEL_NAME} = "linux" ]; then
   export KERNEL_VERS=$(uname -r)
-  if [ -f /etc/lsb-release ]; then
+  if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    export DISTRO=$NAME
+    export RELEASE=$VERSION
+  elif [ -f /etc/lsb-release ]; then
     . /etc/lsb-release
     export DISTRO=$DISTRIB_ID
     export RELEASE=$DISTRIB_RELEASE
@@ -219,9 +223,12 @@ GIT_PS1_SHOWSTASHSTATE=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWUPSTREAM="verbose name"
 GIT_PS1_DESCRIBESTYLE=branch
+PROMPT_DIRTRIM=3
 if [ ${SHLVL} -eq 1 ]; then
+  #export PS1="[\\u@\\h]\$(__git_ps1 "[%s]")[\w]\\$"
   export PS1="[\\u@\\h]\$(__git_ps1 "[%s]")[\$(getshortenedpath)]\\$"
 else
+  #export PS1="[\\u@\\h]\$(__git_ps1 "[%s]")[\w][${SHLVL}]\\$"
   export PS1="[\\u@\\h]\$(__git_ps1 "[%s]")[\$(getshortenedpath)][${SHLVL}]\\$"
 fi
 
@@ -270,17 +277,22 @@ export SUDO_EDITOR="$VISUAL"
 # Functions
 #
 
+# adds pushd to home capability
+unset pushd
 function pushd() {
-  if [[ $# -gt 0 ]]; then
+  if [ $# -gt 0 ]; then
     command pushd $@
   else
     command pushd ~
   fi
 }
 
+# directory listing with a pause
+unset pdir
 function pdir() { dir $* | more; }
 
 # If you ever get lost, this will give you most of what you would need.
+unset status
 function status() {
   local dev=`tty`
   echo "`date`"
@@ -299,6 +311,7 @@ function status() {
 # Here is a series of functions that will set the titles for xterms and others
 
 # set the title bar of the terminal
+unset title
 function title () {
   case "$TERM" in
     *term | rxvt)
@@ -311,6 +324,7 @@ function title () {
 }
 
 # set the terminal's icon title
+unset ititle
 function ititle () {
   case "$TERM" in
     *term | rxvt)
@@ -323,6 +337,7 @@ function ititle () {
 }
 
 # set both the title bar of the terminal and the terminal's icon title
+unset xtitle
 function xtitle () {
   case "$TERM" in
     *term | rxvt)
@@ -332,6 +347,18 @@ function xtitle () {
       echo "Unable to perform this function."
       ;;
   esac
+}
+
+unset tmx
+function tmx () {
+  if [ $# -ne 1 ]; then
+    exit
+  fi
+
+  local config=$1
+
+  tmux new-session -s ${config} -A \; source ~/.tmux/${config}
+  tmux
 }
 
 #

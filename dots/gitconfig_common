@@ -61,7 +61,8 @@
 [alias]
     # Abbreviations for some common commands
     br               = branch 
-    co               = checkout
+    ch               = checkout
+    co               = commit -asm
     di               = diff
     st               = status
 
@@ -83,7 +84,7 @@
     #
     amend            = commit --amend -a
     fetchall         = fetch -v --all
-    #tag             = "!f() { git tag -a $1 -m "$1"; git push origin $1; }; f"
+    tag              = "!f() { git-tag -a $1 -m "$1"; git push origin $1; }; f"
     untag            = "!f() { git tag -d $1; git push --delete origin $1; }; f"
     # Unstage any files that have been added to the staging area
     unstage          = reset HEAD

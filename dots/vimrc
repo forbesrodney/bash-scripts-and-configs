@@ -103,6 +103,7 @@ if has("autocmd")
     au FileType c set shiftwidth=4 tabstop=4 expandtab nowrap
     au FileType cpp set shiftwidth=4 tabstop=4 expandtab nowrap
     au FileType java set shiftwidth=4 tabstop=4 expandtab nowrap
+    au FileType sh set shiftwidth=2 tabstop=2 expandtab nowrap
 
     " Enable file type detection.
     " Use the default filetype settings, so that mail gets 'tw' set to 72,
@@ -236,6 +237,7 @@ Plug 'gilsondev/searchtasks.vim'
 Plug 'majutsushi/tagbar'
 Plug 'airblade/vim-gitgutter'
 Plug 'christoomey/vim-tmux-navigator'
+"Plug 'suan/vim-instant-markdown'
 "Plug 'tpope/vim-vinegar'
 "Plug 'tpope/vim-fugitive'
 "Plug 'euclio/gitignore'
@@ -361,6 +363,9 @@ if executable('cquery')
           \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
           \ })
 endif
+
+" -- vim-instant-markdown
+"let g:instant_markdown_slow = 1
 
 "
 " Theme stuff

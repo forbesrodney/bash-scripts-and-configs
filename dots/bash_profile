@@ -30,6 +30,7 @@ export PATH
 
 SSH_ENV="$HOME/.ssh/environment"
 
+unset start_agent
 function start_agent {
   echo "Initializing new SSH agent..."
   /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
