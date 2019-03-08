@@ -65,6 +65,9 @@
     co               = commit -asm
     di               = diff
     st               = status
+    pus              = push
+    pul              = pull
+    fa               = fetch -v --all
 
     # Specialized log output
     log-g            = log --graph
@@ -83,7 +86,6 @@
     #gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
     #
     amend            = commit --amend -a
-    fetchall         = fetch -v --all
     tag              = "!f() { git-tag -a $1 -m "$1"; git push origin $1; }; f"
     untag            = "!f() { git tag -d $1; git push --delete origin $1; }; f"
     # Unstage any files that have been added to the staging area
