@@ -231,7 +231,8 @@ chmod 755 ~/bin/diff-so-fancy
 if ! windows; then
   echo "~/.tmux/plugins/tpm -"
   mkdir -p ~/.tmux/plugins
-  if [ ! =d ~/.tmux/plugins/tpm ]; then
+  [ -e ~/.tmux/plugins/tpm ] && [ ! -d ~/.tmux/plugins/tpm ] && rm -rf ~/.tmux/plugins/tpm
+  if [ ! -d ~/.tmux/plugins/tpm ]; then
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
   else
     pushd ~/.tmux/plugins/tpm > /dev/null
@@ -239,10 +240,12 @@ if ! windows; then
     popd > /dev/null
   fi
   ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+  ~/.tmux/plugins/tpm/scripts/update_plugin.sh all
 fi
 
 echo "~/.vim/autoload/plug.vim -"
 mkdir -p ~/.vim/autoload/
 curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 vim +PlugInstall +qall
+vim +PlugUpdate +qall
 
