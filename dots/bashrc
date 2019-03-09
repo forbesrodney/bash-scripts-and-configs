@@ -121,7 +121,7 @@ elif [ ${KERNEL_NAME} = "linux" ]; then
     export DISTRO=$(uname -s)
     export RELEASE=$(uname -r)
   fi
-elif [ ${KERNEL_NAME} ~= ^mingw ]; then
+elif [ "${KERNEL_NAME}" ~= ^mingw ]; then
   OS=Windows
 fi
 

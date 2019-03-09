@@ -222,7 +222,7 @@ echo "~/bin/diff-so-fancy.sh -"
 curl https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party/build_fatpack/diff-so-fancy > ~/bin/diff-so-fancy
 chmod 755 ~/bin/diff-so-fancy
 
-[ ! -d ~/.tmux/plugins/tpm ] &&
+[ ! windows ] && [ ! -d ~/.tmux/plugins/tpm ] &&
   echo "~/.tmux/plugins/tpm -" &&
   mkdir -p ~/.tmux/plugins &&
   git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm &&
