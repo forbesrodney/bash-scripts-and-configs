@@ -121,7 +121,7 @@ DOTS="${DOTS} profile"
 # CSH (including tcsh)
 #DOTS="${DOTS} .cshrc .login .logout .alias"
 
-SCRIPTS="list_open_ports.sh yank.sh"
+[ ! windows ] && SCRIPTS="list_open_ports.sh yank.sh"
 #if [ ${KERNEL_NAME} = "darwin" ]; then
 #  SCRIPTS="${SCRIPTS} ${PLATFORM}/access.sh ${OS}/kick.sh ${OS}/free.py"
 #fi
@@ -136,7 +136,7 @@ SCRIPTS="list_open_ports.sh yank.sh"
 pushd ~ > /dev/null
 # Link the dot files
 for f in ${DOTS}; do
-  src=~/.${f}
+  src=.${f}
   dst=${SCRIPTDIR}/dots/${f}
 
   if [ -L ${src} ]; then
@@ -149,8 +149,12 @@ for f in ${DOTS}; do
     continue
   fi
 
-  if [ ! -f ${dst} ] && [ -f ${dst}--${PROFILE} ]; then
-    dst=${dst}--${PROFILE}
+  if [ ! -f ${dst} ]; then
+    if [ -f ${dst}--${PROFILE}--${OS} ]; then
+      dst=${dst}--${PROFILE}
+    elif [ -f ${dst}--${PROFILE} ]; then
+      dst=${dst}--${PROFILE}
+    fi
   fi
   echo "Creating new link : ${src} -> ${dst}"
   if [ ${TEST_LOGIC} -eq 0 ]; then
@@ -188,7 +192,7 @@ fi
 
 # Link the scripts
 for f in ${SCRIPTS}; do
-  src=~/bin/${f}
+  src=bin/${f}
   dst=${SCRIPTDIR}/scripts/${f}
 
   if [ -L ${src} ]; then
