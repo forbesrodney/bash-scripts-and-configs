@@ -228,23 +228,21 @@ echo "~/bin/diff-so-fancy.sh -"
 curl https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party/build_fatpack/diff-so-fancy > ~/bin/diff-so-fancy
 chmod 755 ~/bin/diff-so-fancy
 
-echo $(windows)
-echo ${OS}
-
 if ! windows; then
-  [ ! -d ~/.tmux/plugins/tpm ] &&
-    echo "~/.tmux/plugins/tpm -" &&
-    mkdir -p ~/.tmux/plugins &&
-    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm &&
-    ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+  echo "~/.tmux/plugins/tpm -"
+  mkdir -p ~/.tmux/plugins
+  if [ ! =d ~/.tmux/plugins/tpm ]; then
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+  else
+    pushd ~/.tmux/plugins/tpm > /dev/null
+    git pull
+    popd > /dev/null
+  fi
+  ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 fi
-[ ! -e ~/.vim/autoload/plug.vim ] &&
-  echo "~/.vim/autoload/plug.vim -" &&
-  mkdir -p ~/.vim/autoload/ &&
-  curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim &&
-  vim +PlugInstall +qall
 
-echo
-echo "**************************************"
-echo "* Don't forget to edit ~/.gitconfig. *"
-echo "**************************************"
+echo "~/.vim/autoload/plug.vim -"
+mkdir -p ~/.vim/autoload/
+curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+vim +PlugInstall +qall
+
