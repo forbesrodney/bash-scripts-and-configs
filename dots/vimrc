@@ -60,10 +60,6 @@ set smartcase           " smartcase will do a case sensitive search if using cap
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 let &guioptions = substitute(&guioptions, "t", "", "g")
 
-" Trim blanks on exit
-"      :%s/\s\+$//
-:command Tb %s/\s\+$//
-
 :set cpoptions+=$
 
 "
@@ -92,27 +88,37 @@ vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
 " text is lost and it only works for putting the current register.
 "vnoremap p "_dp
 
+" Configure Folds
+set nofoldenable
+set foldmethod=syntax
+set foldlevel=99
+"set foldlevelstart=10
+"set foldnestmax=10
+" space open/closes folds
+nnoremap <space> za
+
+" Strip trailing whitespace
+function! StripTrailingWhitespace()
+    " Only strip if the b:noStripeWhitespace variable isn't set
+    if exists('b:noStripWhitespace')
+        return
+    endif
+    %s/\s\+$//e
+endfun
+
+:command STW call StripTrailingWhitespace()
+
 "
 " Autocmd stuff
 "
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
-
-    au FileType make setlocal noexpandtab
-    au FileType c set shiftwidth=4 tabstop=4 expandtab nowrap
-    au FileType cpp set shiftwidth=4 tabstop=4 expandtab nowrap
-    au FileType java set shiftwidth=4 tabstop=4 expandtab nowrap
-    au FileType sh set shiftwidth=2 tabstop=2 expandtab nowrap
-
     " Enable file type detection.
     " Use the default filetype settings, so that mail gets 'tw' set to 72,
     " 'cindent' is on in C files, etc.
     " Also load indent files, to automatically do language-dependent indenting.
     filetype plugin indent on
-
-    " For all text files set 'textwidth' to 78 characters.
-    autocmd FileType text setlocal textwidth=78
 
     " When editing a file, always jump to the last known cursor position.
     " Don't do it when the position is invalid or when inside an event handler
@@ -122,6 +128,21 @@ if has("autocmd")
     \   exe "normal g`\"" |
     \ endif
 
+    " Can't do this on every file, because there is an intentional trailing
+    " space in this file
+    "autocmd BufWritePre * %s/\s\+$//e
+    autocmd BufWritePre * call StripTrailingWhitespace()
+    autocmd FileType vim let b:noStripWhitespace=1
+
+    autocmd FileType make setlocal noexpandtab nowrap
+    autocmd FileType c setlocal shiftwidth=4 tabstop=4 expandtab nowrap
+    autocmd FileType cpp setlocal shiftwidth=4 tabstop=4 expandtab nowrap
+    autocmd FileType java setlocal shiftwidth=4 tabstop=4 expandtab nowrap
+    autocmd FileType sh setlocal shiftwidth=2 tabstop=2 expandtab nowrap
+
+    " For all text files set 'textwidth' to 78 characters.
+    autocmd FileType text setlocal textwidth=78
+
 endif " has("autocmd")
 
 "
@@ -129,24 +150,24 @@ endif " has("autocmd")
 "
 
 " Toggle Vexplore with Ctrl-E
-"function! ToggleVExplorer()
-"  if exists("t:expl_buf_num")
-"      let expl_win_num = bufwinnr(t:expl_buf_num)
-"      if expl_win_num != -1
-"          let cur_win_nr = winnr()
-"          exec expl_win_num . 'wincmd w'
-"          close
-"          exec cur_win_nr . 'wincmd w'
-"          unlet t:expl_buf_num
-"      else
-"          unlet t:expl_buf_num
-"      endif
-"  else
-"      exec '1wincmd w'
-"      Vexplore
-"      let t:expl_buf_num = bufnr("%")
-"  endif
-"endfunction
+function! ToggleVExplorer()
+    if exists("t:expl_buf_num")
+        let expl_win_num = bufwinnr(t:expl_buf_num)
+        if expl_win_num != -1
+            let cur_win_nr = winnr()
+            exec expl_win_num . 'wincmd w'
+            close
+            exec cur_win_nr . 'wincmd w'
+            unlet t:expl_buf_num
+        else
+            unlet t:expl_buf_num
+        endif
+    else
+        exec '1wincmd w'
+        Vexplore
+        let t:expl_buf_num = bufnr("%")
+    endif
+endfunction
 "map <silent> <C-E> :call ToggleVExplorer()<CR>
 nmap <C-E> :Lexplore<CR>
 let g:netrw_banner = 0

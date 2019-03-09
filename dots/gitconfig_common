@@ -20,6 +20,7 @@
 [core]
     editor = vim
     whitespace = trailing-space,space-before-tab
+    autocrlf=false
 
 [advice]
     pushNonFastForward = false
@@ -59,8 +60,11 @@
     autosetupmerge = true
 
 [alias]
+    # List aliases
+    aliases          = config --global --includes --get-regexp '^alias\\.'
+
     # Abbreviations for some common commands
-    br               = branch 
+    br               = branch
     ch               = checkout
     co               = commit -asm
     di               = diff

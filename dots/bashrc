@@ -94,10 +94,12 @@ fi
 
 # These however are not, but I'm really not using any of these yet
 if [ ${KERNEL_NAME} = "darwin" ]; then
+  OS=MacOS
   export KERNEL_VERS=$(uname -r)
-  export DISTRO="Mac OS/X"
+  export DISTRO="OS/X"
   export RELEASE=$(sw_vers -productVersion)
 elif [ ${KERNEL_NAME} = "linux" ]; then
+  OS=Linux
   export KERNEL_VERS=$(uname -r)
   if [ -f /etc/os-release ]; then
     . /etc/os-release
@@ -119,6 +121,8 @@ elif [ ${KERNEL_NAME} = "linux" ]; then
     export DISTRO=$(uname -s)
     export RELEASE=$(uname -r)
   fi
+elif [ ${KERNEL_NAME} ~= ^mingw ]; then
+  OS=Windows
 fi
 
 #####################
@@ -357,8 +361,12 @@ function tmx () {
 
   local config=$1
 
-  tmux new-session -s ${config} -A \; source ~/.tmux/${config}
-  tmux
+  tmux ls -F#S | egrep "^${config}$"
+  if [ $? =ne 0 ]; then
+    tmux new-session -s ${config} -A \; source ~/.tmux/${config}
+  else
+    tmux attach -t ${config}
+  fi
 }
 
 #

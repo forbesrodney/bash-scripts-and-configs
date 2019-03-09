@@ -25,6 +25,24 @@
 # SOFTWARE.
 #
 
+TEST_LOGIC=0
+PROFILE="home"
+
+if [ "${#}" -ne 0 ]; then
+  if [ "${#}" -eq 1 ] || [ "${#}" -eq 2 ] && [ "${1}" = "--test" ]; then
+    echo "TESTING SCRIPT LOGIC"
+    TEST_LOGIC=1
+    shift
+  fi
+
+  if [ "${#}" -eq 1 ]; then
+    PROFILE=${1}
+  else
+    echo "Usage : ${0} [--test] [profile]"
+    exit
+  fi
+fi
+
 # We still need this.
 # [[ -n "$WINDIR" ]]
 function windows() { [ "${OS}" = "Windows_NT" ]; }
@@ -33,57 +51,48 @@ function windows() { [ "${OS}" = "Windows_NT" ]; }
 # whether the parameter is a symlink. With two parameters, it will create
 # a symlink to a file or directory, with syntax: link $linkname $target
 function link() {
-    local link_target=$1
-    local link_source=$2
+  local link_target=$1
+  local link_source=$2
 
-    if [ $# -lt 2 ]; then
-        # Check link
-        if windows; then
-            fsutil reparsepoint query "${link_source}" > /dev/null
-        else
-            [ -h "${link_source}" ]
-        fi
+  if [ $# -lt 2 ]; then
+    # Check link
+    if windows; then
+      fsutil reparsepoint query "${link_source}" > /dev/null
     else
-        # Create link
-        if windows; then
-            # Note : Windows needs to be told if it's a directory or not
-            # Note : We need to convert `/` to `\`
-            # Note : The parameters to Windows mklink command are backwards
-            if [ -d "${link_target}" ]; then
-                cmd <<< "mklink /D \"${link_source}\" \"${link_target//\//\\}\"" > /dev/null
-            else
-                cmd <<< "mklink \"${link_source}\" \"${link_target//\//\\}\"" > /dev/null
-            fi
-        else
-            ln -s "${link_target}" "${link_source}"
-        fi
+      [ -h "${link_source}" ]
     fi
+  else
+    # Create link
+    if windows; then
+      # Note : Windows needs to be told if it's a directory or not
+      # Note : We need to convert `/` to `\`
+      # Note : The parameters to Windows mklink command are backwards
+      if [ -d "${link_target}" ]; then
+        cmd <<< "mklink /D \"${link_source}\" \"${link_target//\//\\}\"" > /dev/null
+      else
+        cmd <<< "mklink \"${link_source}\" \"${link_target//\//\\}\"" > /dev/null
+      fi
+    else
+      ln -s "${link_target}" "${link_source}"
+    fi
+  fi
 }
 
 # Remove a link, cross-platform.
 function rmlink() {
-    local link_source=$1
+  local link_source=$1
 
-    if windows; then
-        # Again, Windows needs to be told if it's a file or directory.
-        if [ -d "${link_source}" ]; then
-            rmdir "${link_source}";
-        else
-            rm "${link_source}"
-        fi
+  if windows; then
+    # Again, Windows needs to be told if it's a file or directory.
+    if [ -d "${link_source}" ]; then
+      rmdir "${link_source}";
     else
-        rm "${link_source}"
+      rm "${link_source}"
     fi
+  else
+    rm "${link_source}"
+  fi
 }
-
-if [ "$#" -ne 0 ]; then
-    if [ $# -eq 1 ] && [ $1 = "--test" ]; then
-        echo "TESTING SCRIPT LOGIC"
-    else
-        echo "Usage : $0 [--test]"
-        exit
-    fi
-fi
 
 # Not as portable as I'd like
 #SCRIPTDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
@@ -91,18 +100,20 @@ fi
 SCRIPTDIR=`dirname "$0"`
 SCRIPTDIR=`exec 2>/dev/null;(cd -- "$SCRIPTDIR") && cd -- "$SCRIPTDIR"|| cd "$SCRIPTDIR"; unset PWD; /usr/bin/pwd || /bin/pwd || pwd`
 if windows; then
-    SCRIPTDIR=C:${SCRIPTDIR:2}
+  SCRIPTDIR=C:${SCRIPTDIR:2}
 fi
-#echo ${SCRIPTDIR}
-
-#KERNEL_NAME=$(uname -s | tr "[:upper:]" "[:lower:]")
+if [ ${TEST_LOGIC} -eq 1 ]; then
+  echo ${SCRIPTDIR}
+fi
 
 #
 # Configure manifest information
 #
 
+#KERNEL_NAME=$(uname -s | tr "[:upper:]" "[:lower:]")
+
 # Non shell specific
-DOTS="digrc nslookuprc nofinger gitignore vimrc gitconfig_common gitconfig_mac gitconfig_linux gitconfig_windows astylerc inputrc tmux.conf"
+DOTS="digrc nslookuprc nofinger gitignore vimrc gitconfig gitconfig_common gitconfig_mac gitconfig_linux gitconfig_windows astylerc inputrc tmux.conf"
 # BASH shell
 DOTS="${DOTS} bash_profile bashrc bash_logout bash_alias"
 # SH shell (including ash, dash, ...)
@@ -112,77 +123,90 @@ DOTS="${DOTS} profile"
 
 SCRIPTS="list_open_ports.sh yank.sh"
 #if [ ${KERNEL_NAME} = "darwin" ]; then
-#    SCRIPTS="${SCRIPTS} ${PLATFORM}/access.sh ${OS}/kick.sh ${OS}/free.py"
+#  SCRIPTS="${SCRIPTS} ${PLATFORM}/access.sh ${OS}/kick.sh ${OS}/free.py"
 #fi
 #if [ ${KERNEL_NAME} = "linux" ]; then
-#    SCRIPTS="${SCRIPTS}"
+#  SCRIPTS="${SCRIPTS}"
 #fi
+
+#
+# Start installing stuff
+#
 
 pushd ~ > /dev/null
 # Link the dot files
 for f in ${DOTS}; do
-    if [ -L .${f} ]; then
-        echo "Removing old link : ~/.${f}"
-        if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-            rmlink .${f}
-        fi
-    else
-        if [ -e .${f} ]; then
-            echo "Skipping ~/.${f} : file exists and is not a symbolic link"
-            continue
-        fi
-    fi
+  src=~/.${f}
+  dst=${SCRIPTDIR}/dots/${f}
 
-    echo "Creating new link : ~/.${f} -> ${SCRIPTDIR}/dots/${f}"
-    if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-        link ${SCRIPTDIR}/dots/${f} .${f}
+  if [ -L ${src} ]; then
+    echo "Removing old link : ${src}"
+    if [ ${TEST_LOGIC} -eq 0 ]; then
+      rmlink ${src}
     fi
+  elif [ -e ${src} ]; then
+    echo "Skipping ${src} : file exists and is not a symbolic link"
+    continue
+  fi
+
+  if [ ! -f ${dst} ] && [ -f ${dst}--${PROFILE} ]; then
+    dst=${dst}--${PROFILE}
+  fi
+  echo "Creating new link : ${src} -> ${dst}"
+  if [ ${TEST_LOGIC} -eq 0 ]; then
+    if [ -f ${dst} ]; then
+      link ${dst} ${src}
+    fi
+  fi
 done
 
 # Create the directories
 if ! [ -d bin ]; then
-    if ! [ -e bin ]; then
-        echo "Creating ~/bin"
-        if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-            mkdir bin
-            chmod 755 bin
-        fi
-    else
-        echo "~/bin exists, but isn't a directory"
-        exit
+  if ! [ -e bin ]; then
+    echo "Creating ~/bin"
+    if [ ${TEST_LOGIC} -eq 0 ]; then
+      mkdir bin
+      chmod 755 bin
     fi
+  else
+    echo "~/bin exists, but isn't a directory"
+    exit
+  fi
 fi
 #if ! [ -d bin/${KERNEL_NAME} ]; then
-#    if ! [ -e bin/${KERNEL_NAME} ]; then
-#        echo "Creating ~/bin/${KERNEL_NAME}"
-#        if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-#            mkdir -p bin/${KERNEL_NAME}
-#            chmod 755 bin/${KERNEL_NAME}
-#        fi
-#    else
-#        echo "~/bin/${KERNEL_NAME} exists, but isn't a directory"
-#        exit
+#  if ! [ -e bin/${KERNEL_NAME} ]; then
+#    echo "Creating ~/bin/${KERNEL_NAME}"
+#    if [ ${TEST_LOGIC} -eq 0 ]; then
+#      mkdir -p bin/${KERNEL_NAME}
+#      chmod 755 bin/${KERNEL_NAME}
 #    fi
+#  else
+#    echo "~/bin/${KERNEL_NAME} exists, but isn't a directory"
+#    exit
+#  fi
 #fi
 
 # Link the scripts
 for f in ${SCRIPTS}; do
-    if [ -L bin/${f} ]; then
-        echo "Removing old link : ~/bin/${f}"
-        if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-            rm bin/${f}
-        fi
-    else
-        if [ -e bin/${f} ]; then
-            echo "Skipping ~/bin/${f} : file exists and is not a symbolic link"
-            continue
-        fi
-    fi
+  src=~/bin/${f}
+  dst=${SCRIPTDIR}/scripts/${f}
 
-    echo "Creating new link : ~/bin/${f} -> ${SCRIPTDIR}/scripts/${f}"
-    if [ $# -ne 1 ] || ! [ $1 = "--test" ]; then
-        link ${SCRIPTDIR}/scripts/${f} bin/${f}
+  if [ -L ${src} ]; then
+    echo "Removing old link : ${src}"
+    if [ ${TEST_LOGIC} -eq 0 ]; then
+      rm ${src}
     fi
+  elif [ -e ${src} ]; then
+    echo "Skipping ${src} : file exists and is not a symbolic link"
+    continue
+  fi
+
+  echo "Creating new link : ${src} -> ${dst}"
+  if [ ${TEST_LOGIC} -eq 0 ]; then
+    if [ -f ${dst} ]; then
+      link ${dst} ${src}
+    fi
+  fi
 done
 popd > /dev/null
 
@@ -199,17 +223,17 @@ curl https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party
 chmod 755 ~/bin/diff-so-fancy
 
 [ ! -d ~/.tmux/plugins/tpm ] &&
-    echo "~/.tmux/plugins/tpm -" &&
-    mkdir -p ~/.tmux/plugins &&
-    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm &&
-    ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+  echo "~/.tmux/plugins/tpm -" &&
+  mkdir -p ~/.tmux/plugins &&
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm &&
+  ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 [ ! -e ~/.vim/autoload/plug.vim ] &&
-    echo "~/.vim/autoload/plug.vim -" &&
-    mkdir -p ~/.vim/autoload/ &&
-    curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim &&
-    vim +PlugInstall +qall
+  echo "~/.vim/autoload/plug.vim -" &&
+  mkdir -p ~/.vim/autoload/ &&
+  curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim &&
+  vim +PlugInstall +qall
 
 echo
-echo "**************************************************************"
-echo "* Don't forget to copy and modify gitconfig to ~/.gitconfig. *"
-echo "**************************************************************"
+echo "**************************************"
+echo "* Don't forget to edit ~/.gitconfig. *"
+echo "**************************************"
