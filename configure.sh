@@ -121,7 +121,9 @@ DOTS="${DOTS} profile"
 # CSH (including tcsh)
 #DOTS="${DOTS} .cshrc .login .logout .alias"
 
-[ ! windows ] && SCRIPTS="list_open_ports.sh yank.sh"
+if ! windows; then
+  SCRIPTS="list_open_ports.sh yank.sh"
+fi
 #if [ ${KERNEL_NAME} = "darwin" ]; then
 #  SCRIPTS="${SCRIPTS} ${PLATFORM}/access.sh ${OS}/kick.sh ${OS}/free.py"
 #fi
@@ -226,11 +228,16 @@ echo "~/bin/diff-so-fancy.sh -"
 curl https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party/build_fatpack/diff-so-fancy > ~/bin/diff-so-fancy
 chmod 755 ~/bin/diff-so-fancy
 
-[ ! windows ] && [ ! -d ~/.tmux/plugins/tpm ] &&
-  echo "~/.tmux/plugins/tpm -" &&
-  mkdir -p ~/.tmux/plugins &&
-  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm &&
-  ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+echo $(windows)
+echo ${OS}
+
+if ! windows; then
+  [ ! -d ~/.tmux/plugins/tpm ] &&
+    echo "~/.tmux/plugins/tpm -" &&
+    mkdir -p ~/.tmux/plugins &&
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm &&
+    ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+fi
 [ ! -e ~/.vim/autoload/plug.vim ] &&
   echo "~/.vim/autoload/plug.vim -" &&
   mkdir -p ~/.vim/autoload/ &&
