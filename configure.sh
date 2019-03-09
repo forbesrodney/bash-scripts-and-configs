@@ -151,7 +151,7 @@ for f in ${DOTS}; do
 
   if [ ! -f ${dst} ]; then
     if [ -f ${dst}--${PROFILE}--${OS} ]; then
-      dst=${dst}--${PROFILE}
+      dst=${dst}--${PROFILE}--${OS}
     elif [ -f ${dst}--${PROFILE} ]; then
       dst=${dst}--${PROFILE}
     fi
