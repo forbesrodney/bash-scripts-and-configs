@@ -43,8 +43,9 @@ fi
 #       $KERNEL_ARCH == "x64"
 #       $KERNEL_NAME == "linux"
 #       $KERNEL_VERS == "3.19.0"
-#       $DISTRO      == "lubuntu"
-#       $RELEASE     == "15.04"
+#       $OS_NAME     == "Linux"
+#       $OS_DISTRO   == "Ubuntu"
+#       $OS_RELEASE  == "15.04"
 #
 # uname can provide some of this information, but it's not consistant across
 # platforms.
@@ -82,9 +83,13 @@ fi
 #            $MINGW_CHOST   == x86_64-w64-mingw32
 #            $MSYSTEM       == MINGW64
 #
+# os-release is a recent thing and works great if you have it
 
 # These two seem to be reliable and straight forward
-export KERNEL_NAME=$(uname -s | tr "[:upper:]" "[:lower:]")
+KERNEL_NAME=$(uname -s)
+[ -z ${KERNEL_NAME} ] && [ "${OS}" = "Windows_NT" ] && KERNEL_NAME=${OS}
+KERNEL_NAME=$(echo ${KERNEL_NAME} | tr "[:upper:]" "[:lower:]")
+export KERNEL_NAME
 KERNEL_ARCH=$(getconf LONG_BIT)
 if [ ${KERNEL_ARCH} = 64 ]; then
   export KERNEL_ARCH="x64"
@@ -94,35 +99,41 @@ fi
 
 # These however are not, but I'm really not using any of these yet
 if [ ${KERNEL_NAME} = "darwin" ]; then
-  OS=MacOS
+  OS_NAME=MacOS
   export KERNEL_VERS=$(uname -r)
-  export DISTRO="OS/X"
-  export RELEASE=$(sw_vers -productVersion)
+  export OS_DISTRO="OS/X"
+  export OS_RELEASE=$(sw_vers -productVersion)
 elif [ ${KERNEL_NAME} = "linux" ]; then
-  OS=Linux
+  OS_NAME=Linux
   export KERNEL_VERS=$(uname -r)
   if [ -f /etc/os-release ]; then
     . /etc/os-release
-    export DISTRO=$NAME
-    export RELEASE=$VERSION
+    export OS_DISTRO=$NAME
+    export OS_RELEASE=$VERSION
   elif [ -f /etc/lsb-release ]; then
     . /etc/lsb-release
-    export DISTRO=$DISTRIB_ID
-    export RELEASE=$DISTRIB_RELEASE
+    export OS_DISTRO=$DISTRIB_ID
+    export OS_RELEASE=$DISTRIB_DESCRIPTION
   elif [ -f /etc/debian_version ]; then
-    export DISTRO=Debian  # XXX or Ubuntu??
-    export RELEASE=$(cat /etc/debian_version)
+    export OS_DISTRO=Debian  # XXX or Ubuntu??
+    export OS_RELEASE=$(cat /etc/debian_version)
   elif [ -f /etc/redhat-release ]; then
     OS_MAJOR_VERSION=`sed -rn 's/.*([0-9])\.[0-9].*/\1/p' /etc/redhat-release`
     OS_MINOR_VERSION=`sed -rn 's/.*[0-9].([0-9]).*/\1/p' /etc/redhat-release`
-    export DISTRO="RedHat"
-    export RELEASE="${OS_MAJOR_VERSION}.${OS_MINOR_VERSION}"
+    export OS_DISTRO="RedHat"
+    export OS_RELEASE="${OS_MAJOR_VERSION}.${OS_MINOR_VERSION}"
   else
-    export DISTRO=$(uname -s)
-    export RELEASE=$(uname -r)
+    export OS_DISTRO=UNKNOWN
+    export OS_RELEASE=UNKNOWN
   fi
+elif [ "${KERNEL_NAME}" == "windows_nt" ]; then
+  OS_NAME=Windows
+  #OS_DISTRO=
+  #OS_RELEASE=
 elif [ "${KERNEL_NAME}" ~= ^mingw ]; then
-  OS=Windows
+  OS_NAME=Windows
+  OS_DISTRO=${MSYSTEM}
+  #OS_RELEASE=
 fi
 
 #####################
