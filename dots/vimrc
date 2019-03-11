@@ -169,6 +169,8 @@ endif " has("autocmd")
 "
 
 " RCF - would like a way to auto close on select
+" RCF - would be nice to be able to allow the netrw window on every tab
+"let t:NetrwIsOpen=0
 let g:NetrwIsOpen=0
 
 function! ToggleNetrw()
@@ -183,15 +185,20 @@ function! ToggleNetrw()
         let g:NetrwIsOpen=0
     else
         let g:NetrwIsOpen=1
-        silent Lexplore
+        silent Vexplore
     endif
 endfunction
 nnoremap <silent> <F7> :call ToggleNetrw()<CR>
 let g:netrw_banner = 0
-let g:netrw_liststyle = 2
+" Actually want liststyle to be 3 for a tree look, but there's a bug with
+" regard to symbolic links
+let g:netrw_liststyle = 0
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 25
+let g:netrw_list_hide = '^\./$'
+let g:netrw_hide = 1
+autocmd FileType netrw nnoremap <buffer> q :call ToggleNetrw()<CR>
 augroup ProjectDrawer
     autocmd!
     autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | :call ToggleNetrw() | endif
@@ -267,7 +274,6 @@ Plug 'simeji/winresizer'
 "Plug 'suan/vim-instant-markdown'
 
 "Plug 'tpope/vim-vinegar'
-"Plug 'scrooloose/nerdtree'
 "Plug 'jeetsukumaran/vim-buffergator'
 "Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 "Plug 'junegunn/fzf.vim'
@@ -342,16 +348,6 @@ let g:gutentags_plus_switch = 1
 
 " -- VimCompletesMe
 " no custom settings yet
-
-" -- NerdTree
-"Toggle NERDtree to Ctrl+N
-"nmap <C-N> :NERDTreeToggle<CR>
-"let NERDTreeMinimalUI = 1
-"let NERDTreeDirArrows = 1
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | wincmd p | endif
-"autocmd FileType nerdtree nnoremap <buffer> <CR> <CR>:close<CR>
 
 " -- TagBar
 " Map the tagbar to F8
