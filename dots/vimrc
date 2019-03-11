@@ -233,6 +233,7 @@ set laststatus=2
 set statusline=\ %f
 set statusline+=\ \[%n\]%r%m
 set statusline+=%=
+set statusline+=%{gutentags#statusline('[',']')}
 set statusline+=\ %y
 set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
 set statusline+=\[%{&fileformat}\]
