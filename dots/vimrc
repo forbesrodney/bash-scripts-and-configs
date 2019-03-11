@@ -97,6 +97,23 @@ set foldlevel=99
 " space open/closes folds
 nnoremap <space> za
 
+augroup searchtasks
+    nnoremap <F9> :vimgrep /\\CXXX \\|FIXME \\|TODO \\|RCF /j %<CR>
+    nnoremap <F10> :vimgrep /\\CXXX \\|FIXME \\|TODO \\|RCF /j **/*<CR>
+    nnoremap <leader>t :vimgrep /\\CXXX \\|FIXME \\|TODO \\|RCF /j %<CR>
+    nnoremap <leader>ta :vimgrep /\\CXXX \\|FIXME \\|TODO \\|RCF /j **/*<CR>
+
+    " conditionally auto open the quickfix/location window
+    autocmd!
+    autocmd QuickFixCmdPost [^l]* nested cwindow
+    autocmd QuickFixCmdPost l*    nested lwindow
+
+    " don't switch away from quickfix window when match is selected
+    "autocmd FileType qf nnoremap <buffer> <CR> <CR><C-W>p
+    " switch away from quickfix window when match is selected
+    autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
+augroup END
+
 " Strip trailing whitespace
 function! StripTrailingWhitespace()
     " Only strip if the b:noStripeWhitespace variable isn't set
@@ -106,7 +123,9 @@ function! StripTrailingWhitespace()
     %s/\s\+$//e
 endfun
 
-:command STW call StripTrailingWhitespace()
+if !exists(':STW')
+    :command STW call StripTrailingWhitespace()
+endif
 
 "
 " Autocmd stuff
@@ -132,7 +151,7 @@ if has("autocmd")
     " space in this file
     "autocmd BufWritePre * %s/\s\+$//e
     autocmd BufWritePre * call StripTrailingWhitespace()
-    autocmd FileType vim let b:noStripWhitespace=1
+    autocmd FileType vim,vimwiki let b:noStripWhitespace=1
 
     autocmd FileType make setlocal noexpandtab nowrap
     autocmd FileType c setlocal shiftwidth=4 tabstop=4 expandtab nowrap
@@ -149,38 +168,35 @@ endif " has("autocmd")
 " Netrw stuff
 "
 
-" Toggle Vexplore with Ctrl-E
-function! ToggleVExplorer()
-    if exists("t:expl_buf_num")
-        let expl_win_num = bufwinnr(t:expl_buf_num)
-        if expl_win_num != -1
-            let cur_win_nr = winnr()
-            exec expl_win_num . 'wincmd w'
-            close
-            exec cur_win_nr . 'wincmd w'
-            unlet t:expl_buf_num
-        else
-            unlet t:expl_buf_num
-        endif
+" RCF - would like a way to auto close on select
+let g:NetrwIsOpen=0
+
+function! ToggleNetrw()
+    if g:NetrwIsOpen
+        let i = bufnr("$")
+        while (i >= 1)
+            if (getbufvar(i, "&filetype") == "netrw")
+                silent exe "bwipeout " . i 
+            endif
+            let i-=1
+        endwhile
+        let g:NetrwIsOpen=0
     else
-        exec '1wincmd w'
-        Vexplore
-        let t:expl_buf_num = bufnr("%")
+        let g:NetrwIsOpen=1
+        silent Lexplore
     endif
 endfunction
-"map <silent> <C-E> :call ToggleVExplorer()<CR>
-nmap <C-E> :Lexplore<CR>
+nnoremap <silent> <F7> :call ToggleNetrw()<CR>
 let g:netrw_banner = 0
 let g:netrw_liststyle = 2
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
-let g:netrw_winsize = 25
-"au FileType netrw au BufLeave <buffer> :bd<CR>
-"augroup ProjectDrawer
-"  autocmd!
-"  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | Lexplore | endif
-"augroup END
-"autocmd FileType netrw nnoremap q :bd<CR>
+let g:netrw_winsize = 37
+augroup ProjectDrawer
+    autocmd!
+    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | :call ToggleNetrw() | endif
+    autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | :ene | :call ToggleNetrw() | endif
+augroup END
 
 "
 " Clipboard stuff
@@ -212,25 +228,14 @@ endif
 " Status line stuff
 "
 
-function! GitBranch()
-    return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
-endfunction
-
-function! StatuslineGit()
-    let l:branchname = GitBranch()
-    return strlen(l:branchname) > 0?l:branchname:''
-endfunction
-
 set laststatus=2
 
 set statusline=\ %f
 set statusline+=\ \[%n\]%r%m
-"set statusline+=\ \[%{StatuslineGit()}\]
 set statusline+=%=
 set statusline+=\ %y
 set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
 set statusline+=\[%{&fileformat}\]
-"set statusline+=\ %p%%
 set statusline+=\ %l/%L:%c
 " The trailing space is important
 set statusline+=\ 
@@ -251,37 +256,20 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'vimwiki/vimwiki'
 Plug 'chazy/dirsettings'
-Plug 'xolox/vim-misc'
-Plug 'xolox/vim-easytags'
-Plug 'brookhong/cscope.vim'
-Plug 'gilsondev/searchtasks.vim'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'skywind3000/gutentags_plus'
+Plug 'ajh17/VimCompletesMe'
 Plug 'majutsushi/tagbar'
 Plug 'airblade/vim-gitgutter'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'simeji/winresizer'
 "Plug 'suan/vim-instant-markdown'
+
 "Plug 'tpope/vim-vinegar'
-"Plug 'tpope/vim-fugitive'
-"Plug 'euclio/gitignore'
-"Plug 'zivyangll/git-blame.vim'
 "Plug 'scrooloose/nerdtree'
-"Plug 'scrooloose/nerdcommenter'
-"Plug 'SirVer/ultisnips'
 "Plug 'jeetsukumaran/vim-buffergator'
-"Plug 'simeji/winresizer'
-"Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
-"Plug 'powerline/powerline'
-"Plug 'hashivim/vim-vagrant'
 "Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 "Plug 'junegunn/fzf.vim'
-"Plug 'davidhalter/jedi-vim'
-"Plug 'kergoth/vim-bitbake'
-"Plug 'gcmt/taboo.vim'
-"Plug 'jiangmiao/auto-pairs'
-"Plug 'zxqfl/tabnine-vim'
-"Plug 'prabirshrestha/async.vim'
-"Plug 'prabirshrestha/vim-lsp'
-"Plug 'pdavydov108/vim-lsp-cquery'
 
 " Themes to be installed
 "Plug 'gkjgh/cobalt'
@@ -293,7 +281,7 @@ Plug 'vim-scripts/dante.vim'
 call plug#end()
 
 "
-" Plugin specific stuff
+" Plugin specific settings
 "
 
 " -- VimWiki
@@ -324,6 +312,27 @@ au BufEnter *.wiki :syntax sync fromstart
 ":nmap <Leader>wf <Plug>VimwikiFollowLink
 ":nmap <Leader>wb <Plug>VimwikiGoBackLink
 
+" -- vim-gutentags
+let g:gutentags_modules = [ 'ctags', 'gtags_cscope' ]
+" config project root markers
+let g:gutentags_project_root = [ '.root' ]
+let g:gutentags_add_default_project_root = 1
+" where to store tag files
+let g:gutentags_cache_dir = '~/.vim/tags'
+" exclude certain files to keep things cleaner
+let g:gutentags_ctags_exclude = ['Makefile', '*.pro', '*.pri',
+                               \ '*.css', '*.html', '*.js', '*.json', '*.xml',
+                               \ '*.ini', '*.md']
+nnoremap <leader>[ <C-t>
+nnoremap <leader>] <C-]>
+
+" -- gutentags_plus
+" change focus to quickfix window after search
+let g:gutentags_plus_switch = 1
+
+" -- VimCompletesMe
+" no custom settings yet
+
 " -- NerdTree
 "Toggle NERDtree to Ctrl+N
 "nmap <C-N> :NERDTreeToggle<CR>
@@ -331,59 +340,16 @@ au BufEnter *.wiki :syntax sync fromstart
 "let NERDTreeDirArrows = 1
 "autocmd StdinReadPre * let s:std_in=1
 "autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-
-" -- Cscope
-nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
-nnoremap <leader>l :call ToggleLocationList()<CR>
-
-" SearchTasks
-" Keywords for searchtask to look for
-let g:searchtasks_list=["TODO", "FIXME", "XXX", "RCF"]
+"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | wincmd p | endif
+"autocmd FileType nerdtree nnoremap <buffer> <CR> <CR>:close<CR>
 
 " -- TagBar
 " Map the tagbar to F8
-nmap <F8> :TagbarToggle<CR>
-
-" -- Vim Airline
-"let g:airline_powerline_fonts = 1
-
-" -- FZF
-" Use ctrl+f to open the file list
-"nnoremap <C-f> :Files<Cr>
-
-"Use ctrl+b to open list of buffers
-"nnoremap <C-b> :Buffers<Cr>
-
-"Use leader+h to open buffer history
-"nmap <Leader>h :History<CR>
-
-" Search through current buffer lines with leader+l and global bufferlines with
-" leader+L
-"nmap <Leader>l :BLines<CR>
-"nmap <Leader>L :Lines<CR>
-
-" Search through tags in current buffer, and search through tags in across the
-" project
-"nmap <Leader>t :BTags<CR>
-"nmap <Leader>T :Tags<CR>
-
-" Search Through Marks with leader+'
-"nmap <Leader>' :Marks<CR>
-
-" Easily grep within project using ctrl+g
-"command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
-"nnoremap <C-g> :Rg<CR>
-
-" -- Cquery
-if executable('cquery')
-    au User lsp_setup call lsp#register_server({
-          \ 'name': 'cquery',
-          \ 'cmd': {server_info->['cquery']},
-          \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-          \ 'initialization_options': { 'cacheDirectory': '/tmp/cquery/cache'  },
-          \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
-          \ })
-endif
+nnoremap <silent> <F8> :TagbarToggle<CR>
+let g:tagbar_autofocus = 1
+let g:tagbar_autoclose = 1
+let g:tagbar_showvisibility = 1
+let g:tagbar_iconchars = ['+', '-']
 
 " -- vim-instant-markdown
 "let g:instant_markdown_slow = 1
@@ -393,9 +359,13 @@ endif
 "
 
 " Change the ugly default colorscheme to something more pleasing to the eye
-"colo cobalt
-colo dante
-"colo gothic
-"colo seashell
-"colo BlackSea
+try
+    "colo cobalt
+    colo dante
+    "colo gothic
+    "colo seashell
+    "colo BlackSea
+catch
+    :silent! colo default
+endtry
 

@@ -373,7 +373,7 @@ function tmx () {
   local config=$1
 
   tmux ls -F#S | egrep "^${config}$"
-  if [ $? =ne 0 ]; then
+  if [ "$?" -ne 0 ]; then
     tmux new-session -s ${config} -A \; source ~/.tmux/${config}
   else
     tmux attach -t ${config}

@@ -28,11 +28,20 @@
 .*.swp
 .*.swo
 
+# Typical build generated files
 .qmake.cache
-
+.qmake.stash
 *.o
 moc_*.cpp
 
+# Sublime Stuff
 /*.sublime-project
 /*.sublime-workspace
+
+# Espresso Stuff
 /*.esproj
+
+# vim-gutentags
+/tags
+/.notags
+

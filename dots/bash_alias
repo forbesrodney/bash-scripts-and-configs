@@ -77,6 +77,7 @@ alias tmux_update='~/.tmux/plugins/tpm/scripts/update_plugin.sh all'
 alias tmux_clean='~/.tmux/plugins/tpm/scripts/clean_plugins.sh'
 alias vim_install='vim +PlugInstall +qall'
 alias vim_update='vim +PlugUpdate +qall'
+alias vim_clean='vim +PlugClean +qall'
 
 alias tmux_sv='/usr/bin/tmux new-session -s SecureView -A \; source ~/.tmux/SecureView'
 

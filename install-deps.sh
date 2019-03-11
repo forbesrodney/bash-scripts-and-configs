@@ -2,7 +2,8 @@
 
 OS="$(cat /etc/os-release | grep ID_LIKE | cut -d "=" -f2)"
 
-COMMON_PKGS="curl exuberant-ctags cscope tmux xclip"
+COMMON_PKGS="curl exuberant-ctags global tmux xclip"
+#cscope
 #powerline fonts-powerline
 #python3-docopt python3-jinja2
 DEBIAN_PKGS=""
