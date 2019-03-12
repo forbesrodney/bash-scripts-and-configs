@@ -23,13 +23,16 @@ set termencoding=utf-8
 
 set display=uhex,lastline
 set shiftwidth=4 tabstop=4 expandtab
-"set list  listchars=tab:»·,trail:·
-set list  listchars=tab:>-,trail:-
+set list
+"set listchars=tab:»·,trail:·
+set listchars=tab:>-,trail:-,extends:#,nbsp:.
 set number
 
 " don't create backups or swap files
 set nobackup
 set noswapfile
+
+set pastetoggle=<F2>
 
 " switch syntax highlighting on, when the terminal has colors
 " also switch on highlighting the last used search pattern.
@@ -50,6 +53,7 @@ set history=50          " keep 50 lines of command line history
 set ruler               " show the cursor position all the time
 set showcmd             " display incomplete commands
 set incsearch           " do incremental searching
+set showmatch           " show matching paren/brace/bracket
 set ignorecase          " case insensitive search
 set smartcase           " smartcase will do a case sensitive search if using caps
 "if exists('&colorcolumn')
@@ -62,12 +66,36 @@ let &guioptions = substitute(&guioptions, "t", "", "g")
 
 :set cpoptions+=$
 
+set wildmenu
+
+"hide buffers instead of closing them. This means that you can have unwritten changes
+"to a file and open a new file using :e, without being forced to write or undo your
+"changes first. Also, undo buffers and marks are preserved while the buffer is open.
+set hidden
+
 "
 " Mappings
 "
 
-" backslash is kinda awkward to hit
+" \ is kinda awkward to hit
 :let mapleader = ","
+
+" turn off search highlight
+nnoremap <leader><space> :nohlsearch<CR>
+
+" move vertically by visual line
+nnoremap j gj
+nnoremap k gk
+
+" allows cursor change in tmux mode - this is very terminal dependent, might have
+" to play around with this
+"if exists('$TMUX')
+"    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+"    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+"else
+"    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+"    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+"endif
 
 " alternate tab switching (gt/gT)
 nnoremap <C-Right> :tabnext<CR>
@@ -76,13 +104,13 @@ nnoremap <C-Left> :tabprevious<CR>
 " Don't use Ex mode, use Q for formatting
 map Q gq
 
-" Make p in Visual mode replace the selected text with the "" register.
-vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
-
 " Fix the messed up <BS> and <DEL>
 "inoremap  
 "set t_kb=
 "set t_kD=
+
+" Make p in Visual mode replace the selected text with the "" register.
+"vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
 
 " This is an alternative that also works in block mode, but the deleted
 " text is lost and it only works for putting the current register.
@@ -97,11 +125,13 @@ set foldlevel=99
 " space open/closes folds
 nnoremap <space> za
 
-augroup searchtasks
-    nnoremap <F9> :vimgrep /\\CXXX \\|FIXME \\|TODO \\|RCF /j %<CR>
-    nnoremap <F10> :vimgrep /\\CXXX \\|FIXME \\|TODO \\|RCF /j **/*<CR>
-    nnoremap <leader>t :vimgrep /\\CXXX \\|FIXME \\|TODO \\|RCF /j %<CR>
-    nnoremap <leader>ta :vimgrep /\\CXXX \\|FIXME \\|TODO \\|RCF /j **/*<CR>
+" Search for code tags like XXX, FIXME, TODO, BUG, NOTE, RCF
+augroup codetags
+    let codetags = [ 'XXX', 'FIXME', 'TODO', 'BUG', 'NOTE', 'RCF' ]
+    nnoremap <expr> <F9>       ':vimgrep /\C ' . join(codetags, ' \\| ') . ' /j %<CR>'
+    nnoremap <expr> <F10>      ':vimgrep /\C ' . join(codetags, ' \\| ') . ' /j **/*<CR>'
+    nnoremap <expr> <leader>t  ':vimgrep /\C ' . join(codetags, ' \\| ') . ' /j %<CR>'
+    nnoremap <expr> <leader>ta ':vimgrep /\C ' . join(codetags, ' \\| ') . ' /j **/*<CR>'
 
     " conditionally auto open the quickfix/location window
     autocmd!
@@ -112,6 +142,8 @@ augroup searchtasks
     "autocmd FileType qf nnoremap <buffer> <CR> <CR><C-W>p
     " switch away from quickfix window when match is selected
     autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
+    " use q to close window if you don't want to select anything
+    autocmd FileType qf nnoremap <buffer> q :cclose<CR>
 augroup END
 
 " Strip trailing whitespace
@@ -170,6 +202,7 @@ endif " has("autocmd")
 
 " RCF - would like a way to auto close on select
 " RCF - would be nice to be able to allow the netrw window on every tab
+" RCF - maybe integrate netrw_list_hide with wildignore
 "let t:NetrwIsOpen=0
 let g:NetrwIsOpen=0
 
@@ -196,6 +229,8 @@ let g:netrw_liststyle = 0
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 25
+"let wildignore = '^\./$'
+"let g:netrw_list_hide = @wildignore
 let g:netrw_list_hide = '^\./$'
 let g:netrw_hide = 1
 autocmd FileType netrw nnoremap <buffer> q :call ToggleNetrw()<CR>
