@@ -265,7 +265,12 @@ export HISTTIMEFORMAT='%a %T '
 export QUOTING_STYLE=literal
 #export QUOTING_STYLE=escape
 
-export TERM='xterm'
+#export TERM='xterm'
+# If the $term variable is xterm, change it to 256 colors!
+if [ "$TERM" = "xterm" ]; then
+    # No it isn't, it's gnome-terminal
+    export TERM="xterm-256color"
+fi
 export VISUAL='vim'
 export EDITOR="$VISUAL"
 export GIT_EDITOR="$VISUAL"

@@ -39,6 +39,9 @@ set pastetoggle=<F2>
 if &t_Co > 2 || has("gui_running")
     syntax on
     set hlsearch
+"    set t_Co=256
+"    set t_AB=^[[48;5;%dm
+"    set t_AF=^[[38;5;%dm
 endif
 
 " allow mouse
@@ -318,6 +321,7 @@ Plug 'junegunn/vim-peekaboo'
 "Plug 'jeetsukumaran/vim-buffergator'
 "Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 "Plug 'junegunn/fzf.vim'
+
 " Themes to be installed
 "Plug 'gkjgh/cobalt'
 Plug 'vim-scripts/dante.vim'
@@ -428,8 +432,11 @@ endtry
 " Status line stuff (must go after the colorscheme stuff)
 "
 
-:hi StatusLine   ctermbg=cyan   ctermfg=black guibg=cyan   guifg=black
-:hi StatusLineNC ctermbg=yellow ctermfg=black guibg=yellow guifg=black
+"hi x236_Grey19 ctermfg=236 guifg=#303030 "rgb=48,48,48
+hi StatusLine       ctermbg=cyan   ctermfg=236 guibg=cyan   guifg=#303030
+hi StatusLineTerm   ctermbg=cyan   ctermfg=236 guibg=cyan   guifg=#303030
+hi StatusLineNC     ctermbg=yellow ctermfg=236 guibg=yellow guifg=#303030
+hi StatusLineTermNC ctermbg=yellow ctermfg=236 guibg=yellow guifg=#303030
 
 set laststatus=2
 
