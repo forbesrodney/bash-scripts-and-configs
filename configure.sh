@@ -218,15 +218,20 @@ popd > /dev/null
 
 echo
 echo "Installing 3rd party bits, ..."
+
 echo "~/.gdbinit -"
 curl https://raw.githubusercontent.com/gdbinit/Gdbinit/master/gdbinit > ~/.gdbinit
 chmod 644 ~/.gdbinit
+touch ~/.gdbinit.local
+
 echo "~/.ctags -"
 curl https://gist.githubusercontent.com/romainl/085b4db4a26a06ec7e16/raw/3f794d8be5bd36835d2c213b9d2aa2bae4559c0b/.ctags > ~/.ctags
 chmod 644 ~/.ctags
+
 echo "~/bin/git-prompt.sh -"
 curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > ~/bin/git-prompt.sh
 chmod 755 ~/bin/git-prompt.sh
+
 echo "~/bin/diff-so-fancy.sh -"
 curl https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party/build_fatpack/diff-so-fancy > ~/bin/diff-so-fancy
 chmod 755 ~/bin/diff-so-fancy

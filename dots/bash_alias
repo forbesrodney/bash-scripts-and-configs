@@ -15,14 +15,53 @@
 # Care has been taken to avoid bash-isms in this file so that it can be used
 # with ash, dash, ...
 #
+# Make sure if you define a function in here that you add an appropriate unset
+# line above it so that it can be cleaned up and leave the unset around if you
+# remove the function. Functions can't be autoremoved like aliases can.
+#
 
 #
 # Mandatory Stuff
 #
 
-# make it easy to modify these aliases
+# make it easy to modify these aliases/functions
 alias ealias='/usr/bin/vi ~/.bash_alias;unalias -a;. ~/.bash_alias'
 alias realias='unalias -a;. ~/.bash_alias'
+
+#
+# Quality of Life Stuff
+#
+
+# adds pushd to home capability
+unset pushd
+function pushd() {
+  if [ $# -gt 0 ]; then
+    command pushd $@
+  else
+    command pushd ~
+  fi
+}
+
+# directory listing with a pause
+unset pdir
+function pdir() { dir $* | more; }
+
+# If you ever get lost, this will give you most of what you would need.
+unset status
+function status() {
+  local dev=`tty`
+  echo "`date`"
+  echo "You are:"
+  echo "   `whoami`@`hostname`,${dev:t} ($TERM) [${SHELL:t}]"
+  echo ""
+  echo "Directories:"
+  echo "   Current - `pwd`"
+  echo "   Stack   - `dirs`"
+  echo "   Home    - $HOME"
+  echo ""
+  echo "and so life goes on..."
+  echo "Copyright (c) 1992-2007 Rodney C Forbes"
+}
 
 # always enable color and flags
 if [ ${KERNEL_NAME} = "linux" ]; then
@@ -54,6 +93,47 @@ alias print='lpr'
 # XWindows Stuff
 #
 
+# Here is a series of functions that will set the titles for xterms and others
+
+# set the title bar of the terminal
+unset title
+function title () {
+  case "$TERM" in
+    *term | rxvt)
+      echo -n -e "\033]2;$*\007"
+      ;;
+    *)
+      echo "Unable to perform this function."
+      ;;
+  esac
+}
+
+# set the terminal's icon title
+unset ititle
+function ititle () {
+  case "$TERM" in
+    *term | rxvt)
+      echo -n -e "\033]1;$*\007"
+      ;;
+    *)
+      echo "Unable to perform this function."
+      ;;
+  esac
+}
+
+# set both the title bar of the terminal and the terminal's icon title
+unset xtitle
+function xtitle () {
+  case "$TERM" in
+    *term | rxvt)
+      echo -n -e "\033]0;$*\007"
+      ;;
+    *)
+      echo "Unable to perform this function."
+      ;;
+  esac
+}
+
 alias win='startx'
 alias work='title "Working Window \(`hostname | cut -d. -f1`\)"'
 
@@ -72,12 +152,30 @@ fi
 
 #alias astyle='astyle -A2 -C -S -K -N -H -p -k3 -W3 -n -z2 -Y -w -S -o -O -c --min-conditional-indent=0 --indent=spaces=4'
 
-alias tmux_install='~/.tmux/plugins/tpm/scripts/install_plugins.sh'
-alias tmux_update='~/.tmux/plugins/tpm/scripts/update_plugin.sh all'
-alias tmux_clean='~/.tmux/plugins/tpm/scripts/clean_plugins.sh'
+# Vim Stuff
 alias vim_install='vim +PlugInstall +qall'
 alias vim_update='vim +PlugUpdate +qall'
 alias vim_clean='vim +PlugClean +qall'
 
+# TMux Stuff
+unset tmx
+function tmx () {
+  if [ $# -ne 1 ]; then
+    exit
+  fi
+
+  local config=$1
+
+  tmux ls -F#S | egrep "^${config}$"
+  if [ "$?" -ne 0 ]; then
+    tmux new-session -s ${config} \; source ~/.tmux/layouts/${config}
+  else
+    tmux attach -t ${config}
+  fi
+}
+
+alias tmux_install='~/.tmux/plugins/tpm/scripts/install_plugins.sh'
+alias tmux_update='~/.tmux/plugins/tpm/scripts/update_plugin.sh all'
+alias tmux_clean='~/.tmux/plugins/tpm/scripts/clean_plugins.sh'
 alias tmux_sv='/usr/bin/tmux new-session -s SecureView -A \; source ~/.tmux/SecureView'
 

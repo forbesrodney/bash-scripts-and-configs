@@ -24,7 +24,7 @@ set termencoding=utf-8
 set display=uhex,lastline
 set shiftwidth=4 tabstop=4 expandtab
 set list
-"set listchars=tab:»·,trail:·
+"set listchars=tab:Â»Â·,trail:Â·
 set listchars=tab:>-,trail:-,extends:#,nbsp:.
 set number
 
@@ -73,6 +73,8 @@ set wildmenu
 "changes first. Also, undo buffers and marks are preserved while the buffer is open.
 set hidden
 
+set report=0
+
 "
 " Mappings
 "
@@ -116,6 +118,8 @@ noremap Q gq
 " text is lost and it only works for putting the current register.
 "vnoremap p "_dp
 
+cmap w!! w !sudo tee % >/dev/null
+
 " Configure Folds
 set nofoldenable
 set foldmethod=syntax
@@ -125,26 +129,9 @@ set foldlevel=99
 " space open/closes folds
 nnoremap <space> za
 
-" Search for code tags like XXX, FIXME, TODO, BUG, NOTE, RCF
-augroup codetags
-    let codetags = [ 'XXX', 'FIXME', 'TODO', 'BUG', 'NOTE', 'RCF' ]
-    nnoremap <expr> <F9>       ':vimgrep /\C ' . join(codetags, ' \\| ') . ' /j %<CR>'
-    nnoremap <expr> <F10>      ':vimgrep /\C ' . join(codetags, ' \\| ') . ' /j **/*<CR>'
-    nnoremap <expr> <leader>t  ':vimgrep /\C ' . join(codetags, ' \\| ') . ' /j %<CR>'
-    nnoremap <expr> <leader>ta ':vimgrep /\C ' . join(codetags, ' \\| ') . ' /j **/*<CR>'
-
-    " conditionally auto open the quickfix/location window
-    autocmd!
-    autocmd QuickFixCmdPost [^l]* nested cwindow
-    autocmd QuickFixCmdPost l*    nested lwindow
-
-    " don't switch away from quickfix window when match is selected
-    "autocmd FileType qf nnoremap <buffer> <CR> <CR><C-W>p
-    " switch away from quickfix window when match is selected
-    autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
-    " use q to close window if you don't want to select anything
-    autocmd FileType qf nnoremap <buffer> q :cclose<CR>
-augroup END
+" Quickly edit/reload this configuration file
+nnoremap gev :e $MYVIMRC<CR>
+nnoremap gsv :so $MYVIMRC<CR>
 
 " Strip trailing whitespace
 function! StripTrailingWhitespace()
@@ -163,8 +150,37 @@ endif
 " Autocmd stuff
 "
 
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
+if has('autocmd') " Only do this part when compiled with support for autocommands.
+    augroup vimrc     " Source vim configuration upon save
+        autocmd! BufWritePost $MYVIMRC source % | echom "Reloaded " . $MYVIMRC | redraw
+        autocmd! BufWritePost $MYGVIMRC if has('gui_running') | so % | echom "Reloaded " . $MYGVIMRC | endif | redraw
+    augroup END
+endif " has("autocmd")
+
+" Search for code tags like XXX, FIXME, TODO, BUG, NOTE, RCF
+if has('autocmd') " Only do this part when compiled with support for autocommands.
+    augroup codetags
+        let codetags = [ 'XXX', 'FIXME', 'TODO', 'BUG', 'NOTE', 'RCF' ]
+        "nnoremap <expr> <F9>       ':vimgrep /\C ' . join(codetags, ' \\| ') . ' /j %<CR>'
+        "nnoremap <expr> <F10>      ':vimgrep /\C ' . join(codetags, ' \\| ') . ' /j **/*<CR>'
+        nnoremap <expr> <leader>t  ':vimgrep /\C ' . join(codetags, ' \\| ') . ' /j %<CR>'
+        nnoremap <expr> <leader>ta ':vimgrep /\C ' . join(codetags, ' \\| ') . ' /j **/*<CR>'
+
+        " conditionally auto open the quickfix/location window
+        autocmd!
+        autocmd QuickFixCmdPost [^l]* nested cwindow
+        autocmd QuickFixCmdPost l*    nested lwindow
+
+        " don't switch away from quickfix window when match is selected
+        "autocmd FileType qf nnoremap <buffer> <CR> <CR><C-W>p
+        " switch away from quickfix window when match is selected
+        autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
+        " use q to close window if you don't want to select anything
+        autocmd FileType qf nnoremap <buffer> q :cclose<CR>
+    augroup END
+endif " has("autocmd")
+
+if has("autocmd") " Only do this part when compiled with support for autocommands.
     " Enable file type detection.
     " Use the default filetype settings, so that mail gets 'tw' set to 72,
     " 'cindent' is on in C files, etc.
@@ -193,7 +209,6 @@ if has("autocmd")
 
     " For all text files set 'textwidth' to 78 characters.
     autocmd FileType text setlocal textwidth=78
-
 endif " has("autocmd")
 
 "
@@ -202,7 +217,7 @@ endif " has("autocmd")
 
 " RCF - would like a way to auto close on select
 " RCF - would be nice to be able to allow the netrw window on every tab
-"       it appears that the netrw buffers are identical
+"       it appears that netrw uses the same buffer in all windows
 " RCF - maybe integrate netrw_list_hide with wildignore
 "let t:NetrwIsOpen=0
 let g:NetrwIsOpen=0
@@ -272,23 +287,6 @@ if has('clipboard')
 endif
 
 "
-" Status line stuff
-"
-
-set laststatus=2
-
-set statusline=\ %f
-set statusline+=\ \[%n\]%r%m
-set statusline+=%=
-set statusline+=%{gutentags#statusline('[',']')}
-set statusline+=\ %y
-set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
-set statusline+=\[%{&fileformat}\]
-set statusline+=\ %l/%L:%c
-" The trailing space is important
-set statusline+=\ 
-
-"
 " VimPlug stuff
 "
 
@@ -302,6 +300,7 @@ endif
 " Plugins to be installed
 call plug#begin('~/.vim/plugged')
 
+"Plug 'tpope/vim-sensible'
 Plug 'vimwiki/vimwiki'
 Plug 'chazy/dirsettings'
 Plug 'ludovicchabant/vim-gutentags'
@@ -311,19 +310,21 @@ Plug 'majutsushi/tagbar'
 Plug 'airblade/vim-gitgutter'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'simeji/winresizer'
+Plug 'junegunn/vim-peekaboo'
+"Plug 'Yilin-Yang/vim-markbar'
 "Plug 'suan/vim-instant-markdown'
 
 "Plug 'tpope/vim-vinegar'
 "Plug 'jeetsukumaran/vim-buffergator'
 "Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 "Plug 'junegunn/fzf.vim'
-
 " Themes to be installed
 "Plug 'gkjgh/cobalt'
-Plug 'vim-scripts/dante.vim'
+"Plug 'vim-scripts/dante.vim'
 "Plug 'vim-scripts/Gothic'
 "Plug 'vim-scripts/seashell'
 "Plug 'vim-scripts/BlackSea'
+Plug 'dracula/vim', { 'as': 'dracula' }
 
 call plug#end()
 
@@ -337,27 +338,27 @@ let g:vimwiki_list = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.wiki
 au BufEnter *.wiki :syntax sync fromstart
 
 " >>, <<  - indents/outdents single line
-nnoremap >> <Plug>VimwikiIncreaseLvlSingleItem
-vnoremap >> <Plug>VimwikiIncreaseLvlSingleItem
-nnoremap << <Plug>VimwikiDecreaseLvlSingleItem
-vnoremap << <Plug>VimwikiDecreaseLvlSingleItem
+nmap >> <Plug>VimwikiIncreaseLvlSingleItem
+vmap >> <Plug>VimwikiIncreaseLvlSingleItem
+nmap << <Plug>VimwikiDecreaseLvlSingleItem
+vmap << <Plug>VimwikiDecreaseLvlSingleItem
 " >>>, << - indents/outdents whole item
-nnoremap >>> <Plug>VimwikiIncreaseLvlWholeItem
-vnoremap >>> <Plug>VimwikiIncreaseLvlWholeItem
-nnoremap <<< <Plug>VimwikiDecreaseLvlWholeItem
-vnoremap <<< <Plug>VimwikiDecreaseLvlWholeItem
+nmap >>> <Plug>VimwikiIncreaseLvlWholeItem
+vmap >>> <Plug>VimwikiIncreaseLvlWholeItem
+nmap <<< <Plug>VimwikiDecreaseLvlWholeItem
+vmap <<< <Plug>VimwikiDecreaseLvlWholeItem
 " tt, rr, ++, --  - toggles completed/not started, rejects/unrejects, increments/decrements completeness (. o O X) of a list item
-nnoremap tt <Plug>VimwikiToggleListItem
-vnoremap tt <Plug>VimwikiToggleListItem
-nnoremap rr <Plug>VimwikiToggleRejectedListItem
-vnoremap rr <Plug>VimwikiToggleRejectedListItem
-nnoremap ++ <Plug>VimwikiIncrementListItem
-vnoremap ++ <Plug>VimwikiIncrementListItem
-nnoremap -- <Plug>VimwikiDecrementListItem
-vnoremap -- <Plug>VimwikiDecrementListItem
+nmap tt <Plug>VimwikiToggleListItem
+vmap tt <Plug>VimwikiToggleListItem
+nmap rr <Plug>VimwikiToggleRejectedListItem
+vmap rr <Plug>VimwikiToggleRejectedListItem
+nmap ++ <Plug>VimwikiIncrementListItem
+vmap ++ <Plug>VimwikiIncrementListItem
+nmap -- <Plug>VimwikiDecrementListItem
+vmap -- <Plug>VimwikiDecrementListItem
 " Playing around with changing the way you follow links and go back
-"nnoremap <Leader>wf <Plug>VimwikiFollowLink
-"nnoremap <Leader>wb <Plug>VimwikiGoBackLink
+"nmap <leader>wf <Plug>VimwikiFollowLink
+"nmap <leader>wb <Plug>VimwikiGoBackLink
 
 " -- vim-gutentags
 set tags=./.tags;,.tags
@@ -400,6 +401,13 @@ let g:tagbar_iconchars = ['+', '-']
 " -- vim-instant-markdown
 "let g:instant_markdown_slow = 1
 
+" -- vim-markbar
+nmap <leader>m <Plug>ToggleMarkbar
+
+" the following are unneeded if ToggleMarkbar is mapped
+nmap <leader>mo <Plug>OpenMarkbar
+nmap <leader>mc <Plug>CloseMarkbar
+
 "
 " Theme stuff
 "
@@ -407,11 +415,33 @@ let g:tagbar_iconchars = ['+', '-']
 " Change the ugly default colorscheme to something more pleasing to the eye
 try
     "colo cobalt
-    colo dante
+    "colo dante
     "colo gothic
     "colo seashell
     "colo BlackSea
+    colo dracula
 catch
     silent! colo default
 endtry
+
+"
+" Status line stuff (must go after the colorscheme stuff)
+"
+
+:hi StatusLine   ctermbg=cyan   ctermfg=black guibg=cyan   guifg=black
+:hi StatusLineNC ctermbg=yellow ctermfg=black guibg=yellow guifg=black
+
+set laststatus=2
+
+set statusline=
+set statusline+=\ %f
+set statusline+=\ \[%n\]%r%m
+set statusline+=%=
+set statusline+=%{gutentags#statusline('[',']')}
+set statusline+=\ %y
+set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
+set statusline+=\[%{&fileformat}\]
+set statusline+=\ %l/%L:%c
+" The trailing space is important
+set statusline+=\ 
 
