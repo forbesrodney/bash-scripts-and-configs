@@ -168,7 +168,11 @@ function tmx () {
 
   tmux ls -F#S | egrep "^${config}$"
   if [ "$?" -ne 0 ]; then
-    tmux new-session -s ${config} \; source ~/.tmux/layouts/${config}
+    if [ -f ~/.tmux/layouts/${config}.tmux ]; then
+        tmux new-session -s ${config} \; source ~/.tmux/layouts/${config}.tmux
+    else
+        tmux new-session -s ${config}
+    fi
   else
     tmux attach -t ${config}
   fi
