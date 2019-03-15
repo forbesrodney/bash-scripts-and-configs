@@ -130,7 +130,7 @@ elif [ "${KERNEL_NAME}" == "windows_nt" ]; then
   OS_NAME=Windows
   #OS_DISTRO=
   #OS_RELEASE=
-elif [ "${KERNEL_NAME}" ~= ^mingw ]; then
+elif [[ "${KERNEL_NAME}" =~ ^mingw ]]; then
   OS_NAME=Windows
   OS_DISTRO=${MSYSTEM}
   #OS_RELEASE=
