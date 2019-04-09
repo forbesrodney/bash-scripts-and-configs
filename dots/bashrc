@@ -239,6 +239,14 @@ GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWUPSTREAM="verbose name"
 GIT_PS1_DESCRIBESTYLE=branch
 PROMPT_DIRTRIM=3
+RED="$(tput setaf 1)"
+GREEN="$(tput setaf 2)"
+YELLOW="$(tput setaf 3)"
+BLUE="$(tput setaf 4)"
+MAGENTA="$(tput setaf 5)"
+CYAN="$(tput setaf 6)"
+WHITE="$(tput setaf 7)"
+RESET="$(tput setaf 9)"
 if [ ${SHLVL} -eq 1 ]; then
   #export PS1="[\\u@\\h]\$(__git_ps1 "[%s]")[\w]\\$"
   export PS1="[\\u@\\h]\$(__git_ps1 "[%s]")[\$(getshortenedpath)]\\$"
