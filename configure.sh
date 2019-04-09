@@ -113,7 +113,7 @@ fi
 #KERNEL_NAME=$(uname -s | tr "[:upper:]" "[:lower:]")
 
 # Non shell specific
-DOTS="digrc nslookuprc nofinger gitignore vimrc gitconfig gitconfig_common gitconfig_mac gitconfig_linux gitconfig_windows astylerc inputrc tmux.conf"
+DOTS="digrc nslookuprc nofinger gitignore vimrc gitconfig gitconfig_common gitconfig_mac gitconfig_linux gitconfig_windows astylerc inputrc tmux.conf bash_sessions_disable"
 # BASH shell
 DOTS="${DOTS} bash_profile bashrc bash_logout bash_alias"
 # SH shell (including ash, dash, ...)
