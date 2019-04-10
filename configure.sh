@@ -46,6 +46,7 @@ fi
 # We still need this.
 # [[ -n "$WINDIR" ]]
 function windows() { [ "${OS}" = "Windows_NT" ]; }
+KERNEL_NAME=$(uname -s | tr "[:upper:]" "[:lower:]")
 
 # Cross-platform symlink function. With one parameter, it will check
 # whether the parameter is a symlink. With two parameters, it will create
@@ -110,26 +111,30 @@ fi
 # Configure manifest information
 #
 
-#KERNEL_NAME=$(uname -s | tr "[:upper:]" "[:lower:]")
+declare -a DOTS
+declare -a SCRIPTS
+declare -a LAYOUTS
 
 # Non shell specific
-DOTS="digrc nslookuprc nofinger gitignore vimrc gitconfig gitconfig_common gitconfig_mac gitconfig_linux gitconfig_windows astylerc inputrc tmux.conf bash_sessions_disable"
+DOTS=(digrc nslookuprc nofinger gitignore vimrc gitconfig gitconfig_common gitconfig_mac gitconfig_linux gitconfig_windows astylerc inputrc tmux.conf bash_sessions_disable)
 # BASH shell
-DOTS="${DOTS} bash_profile bashrc bash_logout bash_alias"
+DOTS+=(bash_profile bashrc bash_logout bash_alias)
 # SH shell (including ash, dash, ...)
-DOTS="${DOTS} profile"
+DOTS+=(profile)
 # CSH (including tcsh)
-#DOTS="${DOTS} .cshrc .login .logout .alias"
+#DOTS+=(.cshrc .login .logout .alias)
 
 if ! windows; then
-  SCRIPTS="list_open_ports.sh yank.sh"
+  SCRIPTS=(list_open_ports.sh yank.sh)
 fi
 #if [ ${KERNEL_NAME} = "darwin" ]; then
-#  SCRIPTS="${SCRIPTS} ${PLATFORM}/access.sh ${OS}/kick.sh ${OS}/free.py"
+#  SCRIPTS+=(${PLATFORM}/access.sh ${OS}/kick.sh ${OS}/free.py)
 #fi
 #if [ ${KERNEL_NAME} = "linux" ]; then
-#  SCRIPTS="${SCRIPTS}"
+#  SCRIPTS+=()
 #fi
+
+LAYOUTS=(SecureView.tmux Builder.tmux Linux_Kernel_Labs.tmux)
 
 #
 # Start installing stuff
@@ -137,7 +142,7 @@ fi
 
 pushd ~ > /dev/null
 # Link the dot files
-for f in ${DOTS}; do
+for f in ${DOTS[@]}; do
   src=.${f}
   dst=${SCRIPTDIR}/dots/${f}
 
@@ -166,36 +171,40 @@ for f in ${DOTS}; do
   fi
 done
 
-# Create the directories
-if ! [ -d bin ]; then
-  if ! [ -e bin ]; then
-    echo "Creating ~/bin"
-    if [ ${TEST_LOGIC} -eq 0 ]; then
-      mkdir bin
-      chmod 755 bin
-    fi
-  else
-    echo "~/bin exists, but isn't a directory"
-    exit
-  fi
-fi
-#if ! [ -d bin/${KERNEL_NAME} ]; then
-#  if ! [ -e bin/${KERNEL_NAME} ]; then
-#    echo "Creating ~/bin/${KERNEL_NAME}"
-#    if [ ${TEST_LOGIC} -eq 0 ]; then
 #      mkdir -p bin/${KERNEL_NAME}
 #      chmod 755 bin/${KERNEL_NAME}
-#    fi
-#  else
-#    echo "~/bin/${KERNEL_NAME} exists, but isn't a directory"
-#    exit
-#  fi
-#fi
 
 # Link the scripts
-for f in ${SCRIPTS}; do
+mkdir -p bin
+chmod 755 bin
+for f in ${SCRIPTS[@]}; do
   src=bin/${f}
   dst=${SCRIPTDIR}/scripts/${f}
+
+  if [ -L ${src} ]; then
+    echo "Removing old link : ${src}"
+    if [ ${TEST_LOGIC} -eq 0 ]; then
+      rm ${src}
+    fi
+  elif [ -e ${src} ]; then
+    echo "Skipping ${src} : file exists and is not a symbolic link"
+    continue
+  fi
+
+  echo "Creating new link : ${src} -> ${dst}"
+  if [ ${TEST_LOGIC} -eq 0 ]; then
+    if [ -f ${dst} ]; then
+      link ${dst} ${src}
+    fi
+  fi
+done
+
+# Link the layouts
+mkdir -p ~/.tmux/layouts
+chmod 755 ~/.tmux/layouts
+for f in ${LAYOUTS[@]}; do
+  src=.tmux/layouts/${f}
+  dst=${SCRIPTDIR}/layouts/${f}
 
   if [ -L ${src} ]; then
     echo "Removing old link : ${src}"

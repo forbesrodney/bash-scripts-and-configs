@@ -181,5 +181,6 @@ function tmx () {
 alias tmux_install='~/.tmux/plugins/tpm/scripts/install_plugins.sh'
 alias tmux_update='~/.tmux/plugins/tpm/scripts/update_plugin.sh all'
 alias tmux_clean='~/.tmux/plugins/tpm/scripts/clean_plugins.sh'
-alias tmux_sv='/usr/bin/tmux new-session -s SecureView -A \; source ~/.tmux/SecureView'
+
+alias tmux_sv='/usr/bin/tmux new-session -s SecureView -A \; source ~/.tmux/layouts/SecureView.tmux'
 
