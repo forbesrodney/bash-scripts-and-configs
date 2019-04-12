@@ -191,9 +191,9 @@ for f in ${SCRIPTS[@]}; do
     continue
   fi
 
-  echo "Creating new link : ${src} -> ${dst}"
-  if [ ${TEST_LOGIC} -eq 0 ]; then
-    if [ -f ${dst} ]; then
+  if [ -f ${dst} ]; then
+    echo "Creating new link : ${src} -> ${dst}"
+    if [ ${TEST_LOGIC} -eq 0 ]; then
       link ${dst} ${src}
     fi
   fi
