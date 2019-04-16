@@ -10,11 +10,10 @@ split-window -v
 new-window
 split-window -v
 
-# Configure a window for minicom
+# Configure a window for accessing the laptop
 new-window
-rename-window minicom
-send-keys 'ssh svbuilder' Enter
-send-keys 'minicom' Enter
+rename-window laptop
+send-keys 'ssh laptop' Enter
 
 # Configure a window for accessing the build box
 new-window
