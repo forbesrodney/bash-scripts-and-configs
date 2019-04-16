@@ -19,8 +19,8 @@
   # Configure a window inside the docker container
   new-window
   rename-window "docker"
-  send-keys cd ~/Development/buildbot-scripts Enter
-  send-keys make debug_svbuilder Enter
+  send-keys "cd ~/Development/buildbot-scripts" Enter
+  send-keys "make debug_svbuilder" Enter
 
   # Return to window 0, pane 0
   select-window -t 0
