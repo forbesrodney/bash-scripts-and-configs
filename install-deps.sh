@@ -25,7 +25,7 @@ elif [ "${OS}" = "rhel fedora" ]; then
 fi
 
 install_deps() {
-  if [ ! -z ${pkg_install} ]; then
+  if [ ! -z "${pkg_install}" ]; then
     for pkg in ${pkg_list}; do
       ${pkg_install} ${pkg}
     done
