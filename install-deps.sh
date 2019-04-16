@@ -2,23 +2,26 @@
 
 OS="$(cat /etc/os-release | grep ID_LIKE | cut -d "=" -f2)"
 
-COMMON_PKGS="curl exuberant-ctags global tmux xclip"
-#cscope
+# I don't know yet which of these package names are debian only. I don't
+# have any RHEL systems to try this on.
+COMMON_PKGS=(sudo build-essential gdb git wget curl vim global tmux xclip)
+#exuberant-ctags cscope
 #powerline fonts-powerline
 #python3-docopt python3-jinja2
-DEBIAN_PKGS=""
-FEDORA_PKGS=""
+DEBIAN_PKGS=()
+FEDORA_PKGS=()
 
 pkg_install=""
-pkg_list=""
+declare -a pkg_list
+pkg_list=${COMMON_PKGS}
 
-  # Set the current package installer
+# Set the current package installer
 if [ "${OS}" = "debian" ]; then
   pkg_install="sudo apt-get install -y"
-  pkg_list="${COMMON_PKGS} ${DEBIAN_PKGS}"
+  pkg_list+=${DEBIAN_PKGS}
 elif [ "${OS}" = "rhel fedora" ]; then
   pkg_install="sudo yum install -y"
-  pkg_list="${COMMON_PKGS} ${FEDORA_PKGS}"
+  pkg_list+=${FEDORA_PKGS}
 fi
 
 install_deps() {
