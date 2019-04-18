@@ -134,7 +134,7 @@ fi
 #  SCRIPTS+=()
 #fi
 
-LAYOUTS=(SecureView.tmux Builder.tmux Linux_Kernel_Labs.tmux)
+LAYOUTS=(SecureView.tmux Builder.tmux Laptop.tmux Linux_Kernel_Labs.inc Minicom.inc Docker.inc)
 
 #
 # Start installing stuff

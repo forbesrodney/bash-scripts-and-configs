@@ -6,8 +6,6 @@
 
 # Three large screens
 
-#set -g status off
-
 # How do we negate
 #%if #{&&:#{DISPLAY},#{==:forbesr-svbuilder,#{host_short}}}
 
@@ -17,15 +15,10 @@
   rename-window svbuilder
 
   # Configure a window inside the docker container
-  new-window
-  rename-window docker
-  send-keys 'cd ~/Development/buildbot-scripts' Enter
-  send-keys 'OS_VERSION=64 make debug_svbuilder' Enter
+  source docker.inc
 
   # Configure a window to run minicom
-  new-window
-  rename-window minicom
-  send-keys 'minicom' Enter
+  source minicom.inc
 
   # Return to window 0, pane 0
   select-window -t 0
