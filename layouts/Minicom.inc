@@ -14,4 +14,8 @@
   new-window
   rename-window minicom
   send-keys 'minicom' Enter
+
+  # Return to window 0, pane 0
+  select-window -t 0
+  select-pane -t 0
 %endif
