@@ -14,7 +14,7 @@
   split-window -v
 
   # Configure a window for Linux Kernel Labs
-  source Linux_Kernel_Labs.inc
+  source ~/.tmux/layouts/Linux_Kernel_Labs.inc
 
   # Return to window 0, pane 0
   select-window -t 0

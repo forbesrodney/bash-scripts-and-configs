@@ -15,10 +15,10 @@
   rename-window svbuilder
 
   # Configure a window inside the docker container
-  source docker.inc
+  source ~/.tmux/layouts/Docker.inc
 
   # Configure a window to run minicom
-  source minicom.inc
+  source ~/.tmux/layouts/Minicom.inc
 
   # Return to window 0, pane 0
   select-window -t 0
