@@ -125,7 +125,7 @@ DOTS+=(profile)
 #DOTS+=(.cshrc .login .logout .alias)
 
 if ! windows; then
-  SCRIPTS=(list_open_ports.sh yank.sh ais_ssh_tunnel)
+  SCRIPTS=(list_open_ports.sh yank.sh ais_ssh_tunnel ais_vnc_tunnels)
 fi
 #if [ ${KERNEL_NAME} = "darwin" ]; then
 #  SCRIPTS+=(${PLATFORM}/access.sh ${OS}/kick.sh ${OS}/free.py)
