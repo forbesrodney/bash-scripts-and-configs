@@ -7,10 +7,6 @@ WS_USER=${WS_USER:=forbesr}
 WS_IP=${WS_IP:=172.16.100.162}
 WS_LOCAL_SSH_PORT=${WS_LOCAL_SSH_PORT:=9998}
 WS_LOCAL_VNC_PORT=${WS_LOCAL_VNC_PORT:=9997}
-CRUX_USER=${CRUX_USER:=rforbes.crux}
-CRUX_IP=${CRUX_IP:=172.16.100.15}
-CRUX_LOCAL_SSH_PORT=${CRUX_LOCAL_SSH_PORT:=9996}
-CRUX_LOCAL_VNC_PORT=${CRUX_LOCAL_VNC_PORT:=9995}
 
 # Keys to add to ssh-agent
 KEYS="id_ecdsa id_rsa"
@@ -50,10 +46,9 @@ echo "Knocking ..."
 fwknop -n ais_spa -R
 sleep 2
 
-echo "Starting SSH tunnels ..."
-ssh -L ${WS_LOCAL_SSH_PORT}:${WS_IP}:22 -L ${CRUX_LOCAL_SSH_PORT}:${CRUX_IP}:22 ais_spa -f sleep 20
+echo "Starting SSH tunnel ..."
+ssh -L ${WS_LOCAL_SSH_PORT}:${WS_IP}:22 ais_spa -f sleep 20
 
-echo "Starting VNC tunnels ..."
+echo "Starting VNC tunnel ..."
 ssh -L ${WS_LOCAL_VNC_PORT}:localhost:5900 ${WS_USER}@localhost -p ${WS_LOCAL_SSH_PORT} -i ~/.ssh/id_rsa -f sleep 20
-ssh -L ${CRUX_LOCAL_VNC_PORT}:localhost:5903 ${CRUX_USER}@localhost -p ${CRUX_LOCAL_SSH_PORT} -i ~/.ssh/id_rsa -f sleep 20
 
