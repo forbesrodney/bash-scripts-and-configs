@@ -3,12 +3,12 @@
 set -e
 
 # Settings used during creation of tunnel and primary ssh session
-USER=${USER:=rforbes.crux}
-IP=${IP:=172.16.100.15}
-LOCAL_SSH_PORT=${LOCAL_SSH_PORT:=9998}
+USER=${USER:=root}
+IP=${IP:=172.16.100.163}
+LOCAL_SSH_PORT=${LOCAL_SSH_PORT:=9999}
 
 # Keys to add to ssh-agent
-KEYS="id_ecdsa id_rsa"
+KEYS="id_ecdsa"
 
 # Keeps track of settings used to start ssh-agent
 SSH_ENV="$HOME/.ssh/environment"
@@ -49,6 +49,5 @@ echo "Starting SSH tunnel ..."
 ssh -L ${LOCAL_SSH_PORT}:${IP}:22 ais_spa -f sleep 20
 
 echo "Connecting to workstation ..."
-ssh -X ${USER}@localhost -p ${LOCAL_SSH_PORT}
-#-i ~/.ssh/id_rsa
+ssh -o PubkeyAuthentication=no -X ${USER}@localhost -p ${LOCAL_SSH_PORT}
 
