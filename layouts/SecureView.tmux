@@ -11,10 +11,10 @@ new-window
 split-window -v
 
 # Configure a window for accessing the laptop
-new-window
-rename-window laptop
-send-keys 'ssh laptop' Enter
-send-keys 'tmx Laptop' Enter
+#new-window
+#rename-window laptop
+#send-keys 'ssh laptop' Enter
+#send-keys 'tmx Laptop' Enter
 
 # Configure a window for accessing the build box
 new-window
