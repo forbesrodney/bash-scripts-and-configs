@@ -3,13 +3,13 @@
 set -e
 
 # Settings used during creation of tunnel and primary ssh session
-USER=${USER:=root}
-IP=${IP:=172.16.100.163}
-LOCAL_SSH_PORT=${LOCAL_SSH_PORT:=9997}
-LOCAL_VNC_PORT=${LOCAL_VNC_PORT:=9996}
+USER=${USER:=forbesr}
+IP=${IP:=172.16.100.162}
+LOCAL_SSH_PORT=${LOCAL_SSH_PORT:=9999}
+LOCAL_VNC_PORT=${LOCAL_VNC_PORT:=9998}
 
 # Keys to add to ssh-agent
-KEYS="id_ecdsa"
+KEYS="id_ecdsa id_rsa"
 
 # Keeps track of settings used to start ssh-agent
 SSH_ENV="$HOME/.ssh/environment"
@@ -49,6 +49,6 @@ sleep 2
 echo "Starting SSH tunnel ..."
 ssh -L ${LOCAL_SSH_PORT}:${IP}:22 ais_spa -f sleep 20
 
-echo "Starting VNC tunnel ..."
-ssh -o PubkeyAuthentication=no -L ${LOCAL_VNC_PORT}:localhost:5900 ${USER}@localhost -p ${LOCAL_SSH_PORT} -f sleep 20
+echo "Connecting to workstation ..."
+ssh -L ${LOCAL_VNC_PORT}:localhost:5900 -X ${USER}@localhost -p ${LOCAL_SSH_PORT} -i ~/.ssh/id_rsa
 

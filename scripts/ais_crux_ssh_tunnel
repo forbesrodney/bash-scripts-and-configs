@@ -5,7 +5,7 @@ set -e
 # Settings used during creation of tunnel and primary ssh session
 USER=${USER:=rforbes.crux}
 IP=${IP:=172.16.100.15}
-LOCAL_SSH_PORT=${LOCAL_SSH_PORT:=9998}
+LOCAL_SSH_PORT=${LOCAL_SSH_PORT:=9993}
 
 # Keys to add to ssh-agent
 KEYS="id_ecdsa id_rsa"
