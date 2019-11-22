@@ -32,6 +32,11 @@ alias realias='unalias -a;. ~/.bash_alias'
 # Quality of Life Stuff
 #
 
+# Fix more on OS/X
+if [ ${KERNEL_NAME} = "darwin" ]; then
+  alias more='more -E'
+fi
+
 # adds pushd to home capability
 unset pushd
 function pushd() {
@@ -182,5 +187,7 @@ alias tmux_install='~/.tmux/plugins/tpm/scripts/install_plugins.sh'
 alias tmux_update='~/.tmux/plugins/tpm/scripts/update_plugin.sh all'
 alias tmux_clean='~/.tmux/plugins/tpm/scripts/clean_plugins.sh'
 
-alias tmux_sv='/usr/bin/tmux new-session -s SecureView -A \; source ~/.tmux/layouts/SecureView.tmux'
+alias tmux_sv='/usr/local/bin/tmux new-session -s SecureView -A \; source ~/.tmux/layouts/SecureView.tmux'
 
+alias mount_sm='sshfs rforbes.crux@speedymaster.tct:/ ~/SpeedyMaster -oauto_cache,reconnect,defer_permissions,noappledouble,negative_vncache,jail_symlinks,volname=SpeedyMaster'
+alias umount_sm='umount ~/SpeedyMaster'

@@ -138,16 +138,36 @@ nnoremap gsv :so $MYVIMRC<CR>
 
 " Strip trailing whitespace
 function! StripTrailingWhitespace()
-    " Only strip if the b:noStripeWhitespace variable isn't set
-    if exists('b:noStripWhitespace')
-        return
+    " Only strip if the b:noStripWhitespace variable isn't set
+    if !exists('b:noStripWhitespace')
+        %s/\s\+$//e
     endif
-    %s/\s\+$//e
 endfun
 
-if !exists(':STW')
-    command STW call StripTrailingWhitespace()
-endif
+function! ToggleSTW()
+    if exists('b:noStripWhitespace')
+        :unlet b:noStripWhitespace
+    else
+        let b:noStripWhitespace=1
+    endif
+endfun
+
+function! ToggleGutter()
+    if exists('b:noGutter')
+        set signcolumn=auto
+        set number
+        :unlet b:noGutter
+        :echo ""
+    else
+        set signcolumn=no
+        set nonumber
+        let b:noGutter=1
+        :echo "-- Copy Mode --"
+    endif
+endfun
+
+nnoremap <silent> <F3> :call ToggleGutter()<CR>
+nnoremap <silent> <F4> :call ToggleSTW()<CR>
 
 "
 " Autocmd stuff
@@ -198,8 +218,10 @@ if has("autocmd") " Only do this part when compiled with support for autocommand
     \   exe "normal g`\"" |
     \ endif
 
-    " Can't do this on every file, because there is an intentional trailing
-    " space in this file
+    autocmd FocusGained,BufEnter * :checktime
+
+    " Can't do this on every file, because there might be an intentional
+    " trailing space in certain filetypes like this file
     "autocmd BufWritePre * %s/\s\+$//e
     autocmd BufWritePre * call StripTrailingWhitespace()
     autocmd FileType vim,vimwiki let b:noStripWhitespace=1
@@ -314,6 +336,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'simeji/winresizer'
 Plug 'junegunn/vim-peekaboo'
+Plug 'tmux-plugins/vim-tmux-focus-events'
 "Plug 'Yilin-Yang/vim-markbar'
 "Plug 'suan/vim-instant-markdown'
 
@@ -402,6 +425,10 @@ let g:tagbar_autoclose = 1
 let g:tagbar_showvisibility = 1
 let g:tagbar_iconchars = ['+', '-']
 
+" -- vim-gitgutter
+set updatetime=100
+let g:gitgutter_git_executable = '/usr/bin/git'
+
 " -- vim-instant-markdown
 "let g:instant_markdown_slow = 1
 
@@ -443,6 +470,7 @@ set laststatus=2
 set statusline=
 set statusline+=\ %f
 set statusline+=\ \[%n\]%r%m
+set statusline+=%{exists('b:noStripWhitespace')?'':'[STW]'}
 set statusline+=%=
 set statusline+=%{gutentags#statusline('[',']')}
 set statusline+=\ %y

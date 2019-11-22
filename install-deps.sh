@@ -1,6 +1,10 @@
 #!/bin/bash
 
-OS="$(cat /etc/os-release | grep ID_LIKE | cut -d "=" -f2)"
+KERNEL_NAME=$(uname -s | tr "[:upper:]" "[:lower:]")
+if [ "${KERNEL_NAME}" = "linux" ]; then
+  OS="$(cat /etc/os-release | grep ID_LIKE | cut -d "=" -f2)"
+  function windows() { [ "${OS}" = "Windows_NT" ]; }
+fi
 
 # I don't know yet which of these package names are debian only. I don't
 # have any RHEL systems to try this on.
@@ -13,22 +17,29 @@ FEDORA_PKGS=()
 
 pkg_install=""
 declare -a pkg_list
-pkg_list=${COMMON_PKGS}
 
 # Set the current package installer
-if [ "${OS}" = "debian" ]; then
-  pkg_install="sudo apt-get install -y"
-  pkg_list+=${DEBIAN_PKGS}
-elif [ "${OS}" = "rhel fedora" ]; then
-  pkg_install="sudo yum install -y"
-  pkg_list+=${FEDORA_PKGS}
+if [ "${KERNEL_NAME}" = "linux" ]; then
+  pkg_list=${COMMON_PKGS}
+  if [ "${OS}" = "debian" ]; then
+    pkg_install="sudo apt-get install -y"
+    pkg_list+=${DEBIAN_PKGS}
+  elif [ "${OS}" = "rhel fedora" ]; then
+    pkg_install="sudo yum install -y"
+    pkg_list+=${FEDORA_PKGS}
+  fi
 fi
 
 install_deps() {
-  if [ ! -z "${pkg_install}" ]; then
-    for pkg in ${pkg_list}; do
-      ${pkg_install} ${pkg}
-    done
+  if [ "${KERNEL_NAME}" = "linux" ]; then
+    if [ ! -z "${pkg_install}" ]; then
+      for pkg in ${pkg_list}; do
+        ${pkg_install} ${pkg}
+      done
+    fi
+  elif [ "${KERNEL_NAME}" = "darwin" ]; then
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    brew bundle
   fi
 }
 
@@ -40,6 +51,9 @@ prompt_user() {
   for pkg in ${pkg_list}; do
     echo ${pkg}
   done
+  if [ "${KERNEL_NAME}" = "darwin" ]; then
+    echo "brew"
+  fi
   echo "------------------------------------------------"
 
   # Ask the user if the want to continue with the installation
@@ -53,3 +67,4 @@ prompt_user() {
 
 prompt_user
 install_deps
+

@@ -258,19 +258,19 @@ fi
 #############################
 ### Environment Variables ###
 #############################
-# cd search path
-export CDPATH=".:~:~/Development"
+# cd search path - CDPATH is considered first
+CDPATH=":~:~/Development"
 
 # Ignore duplicates and ls (with no arguments) as well as built-ins like bg, fg and exit
-export HISTIGNORE="&:[ ]*:ls:[bf]g:exit"
+HISTIGNORE="&:[ ]*:ls:[bf]g:exit"
 # How many history items to keep track of
-export HISTSIZE=100
+HISTSIZE=100
 #export HISTSIZE=1000000
 # How many history items to save when shell exits
-export HISTFILESIZE=500
+HISTFILESIZE=500
 #export HISTFILESIZE=1000000000
-export HISTTIMEFORMAT='%a %T '
-export QUOTING_STYLE=literal
+HISTTIMEFORMAT='%a %T '
+QUOTING_STYLE=literal
 #export QUOTING_STYLE=escape
 
 #export TERM='xterm'

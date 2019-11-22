@@ -15,11 +15,11 @@
 [ -f ~/.bashrc ] && . ~/.bashrc
 
 # set PATH to include /sbin
-PATH=/sbin:${PATH}
+PATH="/sbin:${PATH}"
 
 # set PATH so it includes user's private bin if it exists
 if [ -d ${HOME}/bin ]; then
-  PATH=${HOME}/bin/${KERNEL_NAME}:${HOME}/bin:${PATH}
+  PATH="${HOME}/bin/${KERNEL_NAME}:${HOME}/bin:${PATH}"
 fi
 
 
