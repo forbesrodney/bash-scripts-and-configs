@@ -286,9 +286,9 @@ augroup ProjectDrawer
 augroup END
 
 "
-" Clipboard stuff
+" OS detection stuff
 "
-
+"
 if !exists("g:os")
     if has("win64") || has("win32") || has("win16")
         let g:os = "Windows"
@@ -297,17 +297,15 @@ if !exists("g:os")
     endif
 endif
 
+"
+" Clipboard stuff
+"
+
 if has('clipboard')
-    if g:os == "Darwin"
-        set clipboard=unnamed
-    elseif g:os == "Linux"
-        if has('unnamedplus')
-            set clipboard=unnamedplus
-        else
-            set clipboard=unnamed
-        endif
-    elseif g:os == "Windows"
-        set clipboard=unnamed
+    set clipboard=unnamed
+
+    if has('unnamedplus')
+        set clipboard=unnamedplus
     endif
 endif
 
