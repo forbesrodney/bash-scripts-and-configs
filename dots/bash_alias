@@ -157,6 +157,15 @@ fi
 
 #alias astyle='astyle -A2 -C -S -K -N -H -p -k3 -W3 -n -z2 -Y -w -S -o -O -c --min-conditional-indent=0 --indent=spaces=4'
 
+# Tunnel Stuff
+alias mini_tunnel='USER=forbesr REMOTE_HOST=mac-mini.local LOCAL_VNC_PORT=9999 REMOTE_VNC_PORT=5900 vnc_tunnel'
+alias ais_dev_tunnel='USER=forbesr REMOTE_HOST=172.16.100.162 LOCAL_SSH_PORT=9989 LOCAL_VNC_PORT=9988 ais_tunnel'
+alias ais_crux_tunnel='USER=rforbes REMOTE_HOST=172.16.100.15 LOCAL_SSH_PORT=9986 LOCAL_VNC_PORT=9985 REMOTE_VNC_PORT=5903 ais_tunnel'
+alias ais_3d_tunnel='USER=root REMOTE_HOST=172.16.100.163 LOCAL_SSH_PORT=9983 LOCAL_VNC_PORT=9982 SSH_EXTRA_FLAGS="-o PubkeyAuthentication=no" ais_tunnel'
+alias dev_tunnel='USER=forbesr REMOTE_HOST=172.16.100.162 LOCAL_VNC_PORT=9988 REMOTE_VNC_PORT=5900 vnc_tunnel'
+alias crux_tunnel='USER=rforbes REMOTE_HOST=172.16.100.15 LOCAL_VNC_PORT=9985 REMOTE_VNC_PORT=5903 vnc_tunnel'
+alias 3d_tunnel='USER=root REMOTE_HOST=172.16.100.163 LOCAL_VNC_PORT=9982 REMOTE_VNC_PORT=5900 vnc_tunnel'
+
 # Vim Stuff
 alias vim_install='vim +PlugInstall +qall'
 alias vim_update='vim +PlugUpdate +qall'

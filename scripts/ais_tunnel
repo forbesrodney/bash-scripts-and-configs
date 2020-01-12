@@ -4,15 +4,20 @@ set -e
 
 # Settings used during creation of tunnel and primary ssh session
 USER=${USER:=forbesr}
-IP=${IP:=172.16.100.162}
-LOCAL_SSH_PORT=${LOCAL_SSH_PORT:=9999}
-LOCAL_VNC_PORT=${LOCAL_VNC_PORT:=9998}
+REMOTE_HOST=${REMOTE_HOST:=172.16.100.162}
+LOCAL_SSH_PORT=${LOCAL_SSH_PORT:=9989}
+LOCAL_VNC_PORT=${LOCAL_VNC_PORT:=9988}
+LOCAL_RDP_PORT=${LOCAL_RDP_PORT:=9987}
+REMOTE_SSH_PORT=${REMOTE_SSH_PORT:=22}
+REMOTE_VNC_PORT=${REMOTE_VNC_PORT:=5900}
+REMOTE_RDP_PORT=${REMOTE_RDP_PORT:=3389}
+#SSH_EXTRA_FLAGS=${SSH_EXTRA_FLAGS:=}
 
 # Keys to add to ssh-agent
 KEYS="id_ecdsa id_rsa"
 
 # Keeps track of settings used to start ssh-agent
-SSH_ENV="$HOME/.ssh/environment"
+SSH_ENV="${HOME}/.ssh/environment"
 
 function start_agent {
   echo "Initializing new SSH agent..."
@@ -27,7 +32,7 @@ function start_agent {
 if [ -f "${SSH_ENV}" ]; then
   . "${SSH_ENV}" > /dev/null
   #ps ${SSH_AGENT_PID} doesn't work under cygwin
-  ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+  ps -ef | grep "${SSH_AGENT_PID}" | grep ssh-agent > /dev/null || {
     start_agent
   }
 else
@@ -36,19 +41,19 @@ fi
 
 # Add SSH keys so that it doesn't prompt for the passphrases each time
 for key in ${KEYS}; do
-  ID="$(ssh-add -l | cut -d ' ' -f 3 | grep .ssh/${key})" || true
+  ID=$(ssh-add -l | cut -d ' ' -f 3 | grep .ssh/"${key}") || true
   if [ "${ID}" = "" ]; then
-    ssh-add ~/.ssh/${key}
+    ssh-add ~/.ssh/"${key}"
   fi
 done
 
 echo "Knocking ..."
-fwknop -n ais_spa -R
+fwknop --wget-cmd /usr/bin/wget -n ais_spa -R
 sleep 2
 
 echo "Starting SSH tunnel ..."
-ssh -L ${LOCAL_SSH_PORT}:${IP}:22 ais_spa -f sleep 20
+ssh -L "${LOCAL_SSH_PORT}":"${REMOTE_HOST}":"${REMOTE_SSH_PORT}" -X ais_spa -f sleep 20
 
 echo "Connecting to workstation ..."
-ssh -L ${LOCAL_VNC_PORT}:localhost:5900 -X ${USER}@localhost -p ${LOCAL_SSH_PORT} -i ~/.ssh/id_rsa
+ssh ${SSH_EXTRA_FLAGS} -L "${LOCAL_VNC_PORT}":localhost:"${REMOTE_VNC_PORT}" -L "${LOCAL_RDP_PORT}":localhost:"${REMOTE_RDP_PORT}" -X "${USER}"@localhost -p "${LOCAL_SSH_PORT}" -i ~/.ssh/id_rsa
 
