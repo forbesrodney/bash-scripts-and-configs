@@ -8,7 +8,7 @@ fi
 
 # I don't know yet which of these package names are debian only. I don't
 # have any RHEL systems to try this on.
-COMMON_PKGS=(sudo build-essential gdb git wget curl vim global tmux xclip fwknop shellcheck)
+COMMON_PKGS=(sudo build-essential gdb git wget curl vim exuberant-ctags global tmux xclip fwknop shellcheck)
 #exuberant-ctags cscope
 #powerline fonts-powerline
 #python3-docopt python3-jinja2

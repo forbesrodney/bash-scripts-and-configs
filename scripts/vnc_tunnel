@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# shellcheck disable=SC1090
+# shellcheck disable=SC2009
+
 set -e
 
 # Settings used during creation of tunnel and primary ssh session
