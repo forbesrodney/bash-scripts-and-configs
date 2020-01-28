@@ -358,6 +358,24 @@ call plug#end()
 "
 
 " -- VimWiki
+
+"
+" To configure the vimwiki to be automagically backed up using git, ...
+"
+" Run these commands to initialize and populate the git repo
+" $ git init
+" $ git remote add origin stash:~forbesr/vimwiki
+" $ git add .
+" $ git commit -sm "initial import"
+" $ git push -u origin master
+"
+" Create a file named .vimdir containing these lines
+" :cd %:p:h
+" silent! !git pull > /dev/null
+" :e!
+" autocmd! BufWritePost <buffer> silent! execute "!git add .;git commit -m \"vim autocommit\";git push" | redraw!
+"
+
 let wiki_1 = {}
 let wiki_1.path = '~/vimwiki/'
 let wiki_1.syntax = 'markdown'
