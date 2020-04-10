@@ -6,18 +6,23 @@
 set -e
 
 # Settings used during creation of tunnel and primary ssh session
-USER=${USER:=forbesr}
-REMOTE_HOST=${REMOTE_HOST:=172.16.100.162}
-LOCAL_SSH_PORT=${LOCAL_SSH_PORT:=9989}
-LOCAL_VNC_PORT=${LOCAL_VNC_PORT:=9988}
-LOCAL_RDP_PORT=${LOCAL_RDP_PORT:=9987}
-REMOTE_SSH_PORT=${REMOTE_SSH_PORT:=22}
-REMOTE_VNC_PORT=${REMOTE_VNC_PORT:=5900}
-REMOTE_RDP_PORT=${REMOTE_RDP_PORT:=3389}
-#SSH_EXTRA_FLAGS=${SSH_EXTRA_FLAGS:=}
+: "${USER_NAME:=forbesr}"
+: "${REMOTE_HOST:=172.16.100.162}"
 
-# Keys to add to ssh-agent
-KEYS="id_ecdsa id_rsa"
+: "${LOCAL_SSH_PORT:=9989}"
+: "${REMOTE_SSH_PORT:=22}"
+
+: "${LOCAL_SOCKS_PORT:=1080}"
+
+: "${LOCAL_VNC_PORT:=9988}"
+: "${REMOTE_VNC_PORT:=5900}"
+
+: "${LOCAL_RDP_PORT:=9987}"
+: "${REMOTE_RDP_PORT:=3389}"
+
+# Keys to add to ssh-agent other than id_rsa and id_ecdsa
+declare -a KEYS
+#KEYS+=("ais.id_rsa")
 
 # Keeps track of settings used to start ssh-agent
 SSH_ENV="${HOME}/.ssh/environment"
@@ -43,7 +48,7 @@ else
 fi
 
 # Add SSH keys so that it doesn't prompt for the passphrases each time
-for key in ${KEYS}; do
+for key in "${KEYS[@]}"; do
   ID=$(ssh-add -l | cut -d ' ' -f 3 | grep .ssh/"${key}") || true
   if [ "${ID}" = "" ]; then
     ssh-add ~/.ssh/"${key}"
@@ -54,9 +59,24 @@ echo "Knocking ..."
 fwknop --wget-cmd /usr/bin/wget -n ais_spa -R
 sleep 2
 
+# SSH to spa server and setup ssh tunnel to remote host
 echo "Starting SSH tunnel ..."
-ssh -L "${LOCAL_SSH_PORT}":"${REMOTE_HOST}":"${REMOTE_SSH_PORT}" -X ais_spa -f sleep 20
+ssh -C -X -L 127.0.0.1:"${LOCAL_SSH_PORT}":"${REMOTE_HOST}":"${REMOTE_SSH_PORT}" ais_spa -f sleep 20
 
+# SSH to remote host, setup requested local VNC/RDP tunnels
 echo "Connecting to workstation ..."
-ssh ${SSH_EXTRA_FLAGS} -L "${LOCAL_VNC_PORT}":localhost:"${REMOTE_VNC_PORT}" -L "${LOCAL_RDP_PORT}":localhost:"${REMOTE_RDP_PORT}" -X "${USER}"@localhost -p "${LOCAL_SSH_PORT}" -i ~/.ssh/id_rsa
+declare -a SSH_FLAGS
+if [[ "${ENABLE_FEATURE}" == *"SOCKS"* ]]; then
+  SSH_FLAGS+=("-D ${LOCAL_SOCKS_PORT}")
+fi
+# -L LOCAL_BIND_ADDRESS:LOCAL_BIND_PORT:REMOTE_ADDRESS:REMOTE_PORT
+if [[ "${ENABLE_FEATURE}" == *"VNC"* ]]; then
+  SSH_FLAGS+=("-L 127.0.0.1:${LOCAL_VNC_PORT}:127.0.0.1:${REMOTE_VNC_PORT}")
+fi
+if [[ "${ENABLE_FEATURE}" == *"RDP"* ]]; then
+  SSH_FLAGS+=("-L 127.0.0.1:${LOCAL_RDP_PORT}:127.0.0.1:${REMOTE_RDP_PORT}")
+fi
+
+# shellcheck disable=SC2086
+ssh -C -X "${SSH_FLAGS[@]}" ${SSH_EXTRA_FLAGS} "${USER_NAME}"@localhost -p "${LOCAL_SSH_PORT}" -i ~/.ssh/id_rsa
 

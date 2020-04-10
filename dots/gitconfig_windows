@@ -40,3 +40,8 @@
 
 [mergetool "vsdiffmerge"]
     cmd = 'C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/Common7/IDE/CommonExtensions/Microsoft/TeamFoundation/Team Explorer/vsDiffMerge.exe' "$REMOTE" "$LOCAL" "$BASE" "$MERGED" //m
+
+[UC]
+    defdiffmerge=yes
+    defdiff=yes
+

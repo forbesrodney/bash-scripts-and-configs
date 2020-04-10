@@ -157,14 +157,18 @@ fi
 
 #alias astyle='astyle -A2 -C -S -K -N -H -p -k3 -W3 -n -z2 -Y -w -S -o -O -c --min-conditional-indent=0 --indent=spaces=4'
 
-# Tunnel Stuff
-alias mini_tunnel='USER=forbesr REMOTE_HOST=mac-mini.local LOCAL_VNC_PORT=9999 REMOTE_VNC_PORT=5900 vnc_tunnel'
-alias ais_dev_tunnel='USER=forbesr REMOTE_HOST=172.16.100.162 LOCAL_SSH_PORT=9989 LOCAL_VNC_PORT=9988 ais_tunnel'
-alias ais_crux_tunnel='USER=rforbes REMOTE_HOST=172.16.100.15 LOCAL_SSH_PORT=9986 LOCAL_VNC_PORT=9985 REMOTE_VNC_PORT=5903 ais_tunnel'
-alias ais_3d_tunnel='USER=root REMOTE_HOST=172.16.100.163 LOCAL_SSH_PORT=9983 LOCAL_VNC_PORT=9982 SSH_EXTRA_FLAGS="-o PubkeyAuthentication=no" ais_tunnel'
-alias dev_tunnel='USER=forbesr REMOTE_HOST=172.16.100.162 LOCAL_VNC_PORT=9988 REMOTE_VNC_PORT=5900 vnc_tunnel'
-alias crux_tunnel='USER=rforbes REMOTE_HOST=172.16.100.15 LOCAL_VNC_PORT=9985 REMOTE_VNC_PORT=5903 vnc_tunnel'
-alias 3d_tunnel='USER=root REMOTE_HOST=172.16.100.163 LOCAL_VNC_PORT=9982 REMOTE_VNC_PORT=5900 vnc_tunnel'
+#   SSH_EXTRA_FLAGS="-L 127.0.0.1:\"${LOCAL_RDP_PORT}\":172.16.100.163:\"${REMOTE_RDP_PORT}\""
+# Local Network Tunnel Stuff
+alias mini_tunnel="USER_NAME=forbesr REMOTE_HOST=mac-mini.local ENABLE_FEATURE='VNC' LOCAL_VNC_PORT=9999 REMOTE_VNC_PORT=5900 ssh_tunnel"
+alias dell_tunnel="USER_NAME=forbesrodney@gmail.com REMOTE_HOST=dell-7573.local ENABLE_FEATURE='RDP' LOCAL_RDP_PORT=9998 ssh_tunnel"
+alias dev_tunnel="USER_NAME=forbesr REMOTE_HOST=172.16.100.162 ENABLE_FEATURE='VNC' LOCAL_VNC_PORT=9988 REMOTE_VNC_PORT=5900 ssh_tunnel"
+alias crux_tunnel="USER_NAME=rforbes REMOTE_HOST=172.16.100.15 ENABLE_FEATURE='VNC' LOCAL_VNC_PORT=9985 REMOTE_VNC_PORT=5903 ssh_tunnel"
+alias 3d_tunnel="USER_NAME=root REMOTE_HOST=172.16.100.163 ENABLE_FEATURE='VNC' LOCAL_VNC_PORT=9982 REMOTE_VNC_PORT=5900 ssh_tunnel"
+# Remote Network Tunnel Stuff
+alias ais_dev_tunnel="USER_NAME=forbesr REMOTE_HOST=172.16.100.162 LOCAL_SSH_PORT=9989 ENABLE_FEATURE='VNC SOCKS' LOCAL_VNC_PORT=9988 ais_tunnel"
+alias ais_crux_tunnel="USER_NAME=rforbes REMOTE_HOST=172.16.100.15 LOCAL_SSH_PORT=9986 ENABLE_FEATURE='VNC SOCKS' LOCAL_VNC_PORT=9985 REMOTE_VNC_PORT=5903 LOCAL_SOCKS_PORT=1081 ais_tunnel"
+alias ais_3d_tunnel="USER_NAME=root REMOTE_HOST=172.16.100.163 LOCAL_SSH_PORT=9983 ENABLE_FEATURE='VNC SOCKS' LOCAL_VNC_PORT=9982 LOCAL_SOCKS_PORT=1082 SSH_EXTRA_FLAGS='-o PubkeyAuthentication=no' ais_tunnel"
+#alias ais_test_tunnel="USER_NAME=forbesr REMOTE_HOST=172.16.100.162 ENABLE_FEATURE='VNC SOCKS' LOCAL_SSH_PORT=9989 LOCAL_VNC_PORT=9988 SSH_EXTRA_FLAGS='-L 127.0.0.1:9979:172.16.100.163:3389' ais_tunnel"
 
 # Vim Stuff
 alias vim_install='vim +PlugInstall +qall'
