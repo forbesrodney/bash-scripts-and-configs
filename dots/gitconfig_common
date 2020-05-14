@@ -139,8 +139,11 @@
 
 [difftool]
     prompt = false
+    keepBackup = false
+    trustExitCode = false
 
 [mergetool]
     prompt = false
-    keepBackup = true
+    keepBackup = false
+    trustExitCode = false
 
