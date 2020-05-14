@@ -61,31 +61,31 @@
 
 [alias]
     # List aliases
-    aliases          = config --global --includes --get-regexp '^alias\\.'
+    aliases              = config --global --includes --get-regexp '^alias\\.'
 
     # Abbreviations for some common misspellings
-    remotes         = remote
-    branches        = branch
-    cherrypick      = cherry-pick
-    alias           = !git aliases
+    remotes              = remote
+    branches             = branch
+    cherrypick           = cherry-pick
+    alias                = !git aliases
 
     # Abbreviations for some common commands with common parameters
-    co              = commit -asm
-    fa              = fetch -v --all
-    pf              = push --force
-    rename-branch   = branch -m
+    co                   = commit -asm
+    fa                   = fetch -v --all
+    pf                   = push --force
+    rename-branch        = branch -m
 
     # Specialized diff output
-    ds              = diff --staged
-    dc              = diff --cached
-    dw              = diff --word-diff=plain
+    ds                   = diff --staged
+    dc                   = diff --cached
+    dw                   = diff --word-diff=plain
 
     # Specialized log output
-    log-audit       = log --pretty=format:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cd) %C(cyan)<%an>%Creset' --all --date=local --author "forbesr" --author "5n4k3" --after 2017-07-24 --until 2018-05-11
-    log-g           = log --graph
-    ll              = log --decorate=full --pretty=medium --no-abbrev-commit --date=relative
-    ll-g            = log --decorate=full --pretty=medium --no-abbrev-commit --date=relative --graph
-    showtagsbydate  = log --date-order --tags --simplify-by-decoration --pretty='format:%C(green)%ad %C(red)%h %C(reset)%D' --date=format:'%Y-%m-%d %H:%M:%S'
+    log-audit            = log --pretty=format:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cd) %C(cyan)<%an>%Creset' --all --date=local --author "forbesr" --author "5n4k3" --after 2017-07-24 --until 2018-05-11
+    log-g                = log --graph
+    ll                   = log --decorate=full --pretty=medium --no-abbrev-commit --date=relative
+    ll-g                 = log --decorate=full --pretty=medium --no-abbrev-commit --date=relative --graph
+    showtagsbydate       = log --date-order --tags --simplify-by-decoration --pretty='format:%C(green)%ad %C(red)%h %C(reset)%D' --date=format:'%Y-%m-%d %H:%M:%S'
 
     #qpush     = "!git push origin \"$(git rev-parse --abbrev-ref HEAD)\""
     #qpull     = "!git pull origin \"$(git rev-parse --abbrev-ref HEAD)\""
@@ -93,29 +93,37 @@
     #gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
 
     # amend history
-    amend           = commit --amend -a
+    amend                = commit --amend -a
     # tag stuff
-    tag             = "!f() { git-tag -a $1 -m "$1"; git push origin $1; }; f"
-    untag           = "!f() { git tag -d $1; git push --delete origin $1; }; f"
+    tag                  = "!f() { git-tag -a $1 -m "$1"; git push origin $1; }; f"
+    untag                = "!f() { git tag -d $1; git push --delete origin $1; }; f"
     # Unstage any files that have been added to the staging area
-    unstage         = reset HEAD
+    unstage              = reset HEAD
     # Un-add any files that were mistakenly added
-    unadd           = reset
+    unadd                = reset
     # Un-remove any files that were mistakenly removed
-    unremove        = checkout HEAD
+    unremove             = checkout HEAD
     # Push the current branch to the remote "origin", and set it to track
     # the upstream branch
-    publish         = "!git push -u origin $(git branch-name)"
+    publish              = "!git push -u origin $(git branch-name)"
     # Delete the remote version of the current branch
-    unpublish       = "!git push origin :$(git branch-name)"
+    unpublish            = "!git push origin :$(git branch-name)"
     # Uncommit last commit
-    uncommit        = "reset --soft HEAD~1"
+    uncommit             = "reset --soft HEAD~1"
     # Recommit last commit
-    recommit        = "!f() { : ${LOG_MESSAGE:=\"`git log -1 --pretty=%s`\"} && [[ $# == 1 ]] && LOG_MESSAGE=\"$1\"; git reset --soft HEAD~1; git commit -asm \"$LOG_MESSAGE\"; }; f"
+    recommit             = "!f() { : ${LOG_MESSAGE:=\"`git log -1 --pretty=%s`\"} && [[ $# == 1 ]] && LOG_MESSAGE=\"$1\"; git reset --soft HEAD~1; git commit -asm \"$LOG_MESSAGE\"; }; f"
     # Get upstream
-    getupstream     = rev-parse --abbrev-ref --symbolic-full-name @{u}
+    getupstream          = rev-parse --abbrev-ref --symbolic-full-name @{u}
     # Recheckout
-    recheckout      = "!git reset --hard $(git rev-parse --abbrev-ref --symbolic-full-name @{u})"
+    recheckout           = "!git reset --hard $(git rev-parse --abbrev-ref --symbolic-full-name @{u})"
+
+    delete-local-branch  = "!f() { git checkout master && git branch -D $1; }; f"
+    delete-remote-branch = "!f() { git push origin :$1 && git fetch -p; }; f"
+
+    compare-branches     = "!f() { git log --graph --oneline --left-right --cherry-mark --no-merges $1...$2; }; f"
+    diff-branches        = "!f() { git diff $1..$2; }; f"
+
+    commitas             = "!f() { git -c user.name=\"$1\" -c user.email=\"$2\" commit -as \"$3\"; }; f"
 
 [filter "lfs"]
     clean = git-lfs clean %f
