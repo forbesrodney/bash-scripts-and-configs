@@ -118,7 +118,7 @@
     recheckout           = "!git reset --hard $(git rev-parse --abbrev-ref --symbolic-full-name @{u})"
 
     delete-local-branch  = "!f() { git checkout master && git branch -D $1; }; f"
-    delete-remote-branch = "!f() { git push origin :$1 && git fetch -p; }; f"
+    delete-remote-branch = "!f() { git push $1 :$2 && git fetch -p; }; f"
 
     compare-branches     = "!f() { git log --graph --oneline --left-right --cherry-mark --no-merges $1...$2; }; f"
     diff-branches        = "!f() { git diff $1..$2; }; f"
