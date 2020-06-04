@@ -10,7 +10,7 @@
 #%if #{&&:#{DISPLAY},#{==:forbesr-svbuilder,#{host_short}}}
 
 # This layout should only be used on forbesr-svbuilder
-%if #{==:forbesr-svbuilder,#{host_short}}
+%if #{==:forbesr-vm,#{host_short}}
   new-window
   rename-window minicom
   send-keys 'minicom' Enter

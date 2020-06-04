@@ -7,15 +7,20 @@
 # One large screen
 
 # How do we negate
-#%if #{&&:#{DISPLAY},#{==:forbesr-svbuilder,#{host_short}}}
+#%if #{&&:#{DISPLAY},#{==:DASDevBldr,#{host_short}}}
 
-# This layout should only be used on forbesr-svbuilder
-%if #{==:forbesr-svbuilder,#{host_short}}
-  # Configure a window inside the docker container
+# This layout should only be used on DASDevBldr
+%if #{==:DASDevBldr,#{host_short}}
+  # Configure windows inside the docker containers
   new-window
-  rename-window docker
+  rename-window "docker (master)"
   send-keys 'cd ~/Development/buildbot-scripts' Enter
-  send-keys 'OS_VERSION=64 make debug_svbuilder' Enter
+  send-keys 'WORK_DIR=/data BRANCH=master make debug_svbuilder' Enter
+
+  new-window
+  rename-window "docker (3.1)"
+  send-keys 'cd ~/Development/buildbot-scripts' Enter
+  send-keys 'WORK_DIR=/data BRANCH=3.1 make debug_svbuilder' Enter
 
   # Return to window 0, pane 0
   select-window -t 0

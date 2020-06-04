@@ -1,14 +1,17 @@
-# |-------------|    |-------------|    |-------------|
-# |      |      |    |             |    |             |
-# |      -------|    |-------------|    |             |
-# |      |      |    |             |    |             |
-# |-------------|    |-------------|    |-------------|
+# |-------------|    |-------------|    |-------------|   |-------------|
+# |      |      |    |             |    |             |   |             |
+# |      -------|    |-------------|    |             |   |   minicom   |
+# |      |      |    |             |    |             |   |             |
+# |-------------|    |-------------|    |-------------|   |-------------|
 
 # Configure some default panes for development
 split-window -h
 split-window -v
 new-window
 split-window -v
+
+# Configure a window to run minicom
+#source ~/.tmux/layouts/Minicom.inc
 
 # Configure a window for accessing the laptop
 #new-window
