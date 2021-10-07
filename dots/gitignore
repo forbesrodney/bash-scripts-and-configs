@@ -41,7 +41,10 @@ moc_*.cpp
 # Espresso Stuff
 /*.esproj
 
+# VS Code Stuff
+/*.code-workspace
+/*.vscode
+
 # vim-gutentags
 /tags
 /.notags
-
